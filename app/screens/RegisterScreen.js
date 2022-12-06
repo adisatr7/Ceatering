@@ -2,8 +2,8 @@ import { useState } from "react"
 import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons"
 
-import { auth } from "./LoginScreen"
 import { BackButton } from "../components/Buttons"
+import { auth } from "../config/firebase"
 import global from "../config/global"
 import strings from "../config/strings"
 

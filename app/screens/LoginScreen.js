@@ -4,12 +4,11 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { useAuthRequest } from "expo-auth-session/providers/google"
 import Icon from "react-native-vector-icons/MaterialIcons"
 
-import { app, currentUser } from "../config/firebase"
+import { auth } from "../config/firebase"
 import global from "../config/global"
 import strings from "../config/strings"
 
-// Login stuff
-export const auth = getAuth(app)
+
 
 export default function LoginScreen({navigation}) {
 
@@ -57,7 +56,6 @@ export default function LoginScreen({navigation}) {
         .then((userCredential) => {
           // Logged in 
           const user = userCredential.user
-          console.log(`Login successful user ${user.uid}!`)  // Logging
         })
         .catch((error) => {
           console.log(error.code, error.message)

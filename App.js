@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
@@ -13,9 +14,11 @@ import LoginScreen from "./app/screens/LoginScreen"
 import ForgotPasswordScreen from "./app/screens/ForgotPasswordScreen"
 import RegisterScreen from "./app/screens/RegisterScreen"
 import MainScreen from "./app/screens/MainScreen"
+import { auth } from "./app/config/firebase"
 
 
 const Stack = createStackNavigator()
+
 
 export default function App() {
 

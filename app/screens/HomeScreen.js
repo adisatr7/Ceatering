@@ -5,9 +5,13 @@ import global from "../config/global"
 import Icon from "@expo/vector-icons/MaterialIcons"
 
 import { logout } from "../components/UserAuthentication"
-import { data, recommendedTags } from "../data/Data"
 import BigCard from "../components/BigCard"
 import { CartButton } from "../components/Buttons"
+import { collection, getDocs, getFirestore } from "firebase/firestore"
+import { app } from "../config/firebase"
+
+
+const db = getFirestore(app)
 
 export default function HomeScreen() {
 
@@ -45,7 +49,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
 
           {/* Recommended */}
-          <View style={styles.sectionContainer}>
+          {/* <View style={styles.sectionContainer}>
             <Text style={styles.sectionNameText}>Rekomendasi</Text>
             <View style={styles.sectionListContainer}>
               <FlatList
@@ -56,10 +60,10 @@ export default function HomeScreen() {
                 showsHorizontalScrollIndicator={false}
               />
             </View>
-          </View>
+          </View> */}
           
           {/* Top Restaurants */}
-          <View style={styles.sectionContainer}>
+          {/* <View style={styles.sectionContainer}>
             <Text style={styles.sectionNameText}>Populer</Text>
             <View style={styles.sectionListContainer}>
               <FlatList
@@ -70,10 +74,10 @@ export default function HomeScreen() {
                 showsHorizontalScrollIndicator={false}
               />
             </View>
-          </View>
+          </View> */}
 
           {/* Can handle custom order */}
-          <View style={styles.sectionContainer}>
+          {/* <View style={styles.sectionContainer}>
             <Text style={styles.sectionNameText}>Bisa Buat Paket Sendiri</Text>
             <View style={styles.sectionListContainer}>
               <FlatList
@@ -84,7 +88,7 @@ export default function HomeScreen() {
                 showsHorizontalScrollIndicator={false}
               />
             </View>
-          </View>
+          </View> */}
 
           {/* Reset button */}
           <Text onPress={resetHandler}>Reset app state</Text>

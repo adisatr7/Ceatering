@@ -1,6 +1,5 @@
-import { initializeApp, auth } from 'firebase/app'
-import { getAuth, onAuthStateChanged, User } from "firebase/auth"
-import { useEffect, useState } from 'react'
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 
 
 // Firebase configuration
@@ -16,3 +15,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig)
+export const auth = getAuth(app)

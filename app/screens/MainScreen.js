@@ -1,6 +1,7 @@
+import { useState } from "react"
 import { Image, ImageBackground, StyleSheet, TouchableOpacity, View } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
-import { createBottomTabNavigator, BottomTabBar } from "@react-navigation/bottom-tabs"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import * as Icon from "@expo/vector-icons/"
 
 import global from "../config/global"
@@ -11,14 +12,11 @@ import SearchScreen from "./SearchScreen"
 import ScheduleScreen from "./ScheduleScreen"
 import FavoritesScreen from "./FavoritesScreen"
 import ProfileScreen from "./ProfileScreen"
-import { useState } from "react"
 
 
 const Tab = createBottomTabNavigator()
 
 export default function MainScreen({navigation}) {
-
-  const [midButtonPressed, setMidButtonPressed] = useState(false)
 
   const MiddleButton = ({children, onPress}) => (
     <TouchableOpacity
@@ -111,10 +109,6 @@ export default function MainScreen({navigation}) {
   )
 }
 
-
-const midButtonOptions = {
-
-}
 
 const styles = StyleSheet.create({
   mainContainer: {
