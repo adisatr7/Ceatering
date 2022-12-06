@@ -16,7 +16,6 @@ import { useState } from "react"
 
 const Tab = createBottomTabNavigator()
 
-
 export default function MainScreen({navigation}) {
 
   const [midButtonPressed, setMidButtonPressed] = useState(false)
@@ -50,9 +49,9 @@ export default function MainScreen({navigation}) {
 
             else if(route.name === "Search") {
               if(focused)
-              return <Icon.Ionicons name="search" color={global.color.primary} size={23}/>
+                return <Icon.Ionicons name="search" color={global.color.primary} size={23}/>
               else
-              return <Icon.Ionicons name="search-outline" color={global.color.primary} size={23}/>
+                return <Icon.Ionicons name="search-outline" color={global.color.primary} size={23}/>
             }
             
             else if(route.name === "Schedule") {
@@ -80,14 +79,15 @@ export default function MainScreen({navigation}) {
           tabBarLabelStyle: styles.textLabel,
 
           tabBarStyle: {
+            position: "absolute",
             backgroundColor: "white",
-            backfaceVisibility: "hidden",
             borderTopEndRadius: 10,
             borderTopStartRadius: 10,
             borderBottomStartRadius: 20,
             borderBottomEndRadius: 20,
-            marginBottom: 10,
+            bottom: 10,
             marginHorizontal: 10,
+            paddingHorizontal: 12,
           },
 
           // tabBarBackground: () => {
@@ -128,10 +128,10 @@ const styles = StyleSheet.create({
   },
 
   background: {
-    resizeMode: "cover",
+    resizeMode: "contain",
     elevation: 2,
-    shadowColor: global.shadowColor,
-    shadowOpacity: global.shadowOpacity,
+    // shadowColor: global.shadowColor,
+    // shadowOpacity: global.shadowOpacity,
     shadowOffset: { height: 1 },
 
     borderWidth: global.debugMode ? 1 : 0,
@@ -153,7 +153,8 @@ const styles = StyleSheet.create({
   textLabel: {
     color: global.color.primary,
     fontFamily: global.font.bold,
-    fontSize: global.fontSize.caption
+    fontSize: global.fontSize.caption,
+    bottom: 5
   },
   
   midButton: {

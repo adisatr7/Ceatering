@@ -4,7 +4,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { useAuthRequest } from "expo-auth-session/providers/google"
 import Icon from "react-native-vector-icons/MaterialIcons"
 
-import { app } from "../config/firebase"
+import { app, currentUser } from "../config/firebase"
 import global from "../config/global"
 import strings from "../config/strings"
 
@@ -57,7 +57,7 @@ export default function LoginScreen({navigation}) {
         .then((userCredential) => {
           // Logged in 
           const user = userCredential.user
-          console.log(`Login successful user ${user.email}!`)  // Logging
+          console.log(`Login successful user ${user.uid}!`)  // Logging
         })
         .catch((error) => {
           console.log(error.code, error.message)
@@ -88,8 +88,10 @@ export default function LoginScreen({navigation}) {
   // This part is where user skips the Login screen entirely if they have logged in
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      if(user)
+      if(user) {
+        console.log(`Login successful user ${user.uid}!`)
         gotoMainScreen()
+      }
     })
     return unsubscribe
   }, [])

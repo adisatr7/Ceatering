@@ -1,10 +1,13 @@
-import { View, Text, StatusBar, StyleSheet, FlatList, ScrollView, TouchableOpacity } from "react-native"
+import { View, Text, StatusBar, StyleSheet, FlatList, ScrollView, TouchableOpacity, Image } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useState } from "react"
 import global from "../config/global"
 import Icon from "@expo/vector-icons/MaterialIcons"
-import { logout } from "../components/UserAuthentication"
 
+import { logout } from "../components/UserAuthentication"
+import { data, recommendedTags } from "../data/Data"
+import BigCard from "../components/BigCard"
+import { CartButton } from "../components/Buttons"
 
 export default function HomeScreen() {
 
@@ -37,17 +40,54 @@ export default function HomeScreen() {
 
           {/* Advertisement section */}
           <TouchableOpacity activeOpacity={0.7} style={styles.adContainer} >
+            <Image style={{height: "100%", width: "100%", borderRadius: 10}} source={{uri: "https://cdn0-production-images-kly.akamaized.net/ETx_C-6RiCxqJHnxNe2QJkONrz8=/1200x900/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/844683/original/003049300_1428322197-is.JPG"}}/>
             <Text style={styles.adText}>Iklan</Text>
           </TouchableOpacity>
+
+          {/* Recommended */}
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionNameText}>Rekomendasi</Text>
+            <View style={styles.sectionListContainer}>
+              <FlatList
+                data={data}
+                renderItem={({item}) => <BigCard vendor={item} />}
+                keyExtractor={(item) => item.name}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          </View>
           
           {/* Top Restaurants */}
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionNameText}>Restoran Populer</Text>
-            {/* TODO: Bikin Flatlist nama2 restoran */}
-          </View>          
+            <Text style={styles.sectionNameText}>Populer</Text>
+            <View style={styles.sectionListContainer}>
+              <FlatList
+                data={data}
+                renderItem={({item}) => <BigCard vendor={item} />}
+                keyExtractor={(item) => item.name}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          </View>
+
+          {/* Can handle custom order */}
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionNameText}>Bisa Buat Paket Sendiri</Text>
+            <View style={styles.sectionListContainer}>
+              <FlatList
+                data={data}
+                renderItem={({item}) => <BigCard vendor={item} />}
+                keyExtractor={(item) => item.name}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          </View>
 
           {/* Reset button */}
-          <Text onPress={resetHandler}>Text</Text>
+          <Text onPress={resetHandler}>Reset app state</Text>
 
           {/* Logout button */}
           <Text onPress={logoutHandler}>Logout</Text>
@@ -55,6 +95,8 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
       
+      <CartButton/>
+
       <StatusBar animated translucent backgroundColor={global.color.statusBar} barStyle={hasScrolledDown? "dark-content" : "light-content"}/>
     </View>
   )
@@ -65,13 +107,6 @@ const homeScreenElements = {
   offset: 50,
   marginVertical: 7
 }
-
-// searchBar: {
-//   top: 125,
-//   position: "absolute",
-//   width: "90%",
-//   alignSelf: "center"
-// },
 
 const styles = StyleSheet.create({
   scrollContainer: {
@@ -121,21 +156,25 @@ const styles = StyleSheet.create({
 
   adText: {
     fontFamily: global.font.regular,
-    fontSize: global.fontSize.body
+    fontSize: global.fontSize.body,
+    position: "absolute",
+    color: "white",
+    bottom: 0
   },
 
   sectionContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
+    alignItems: "flex-start",
     justifyContent: "space-between",
-    alignItems: "flex-end",
     bottom: homeScreenElements.offset,
     marginVertical: 10
   },
 
   sectionNameText: {
     color: "black",
-    fontFamily: global.font.semibold,
-    fontSize: global.fontSize.headline3
+    fontFamily: global.font.regular,
+    fontSize: global.fontSize.headline3,
+    marginBottom: 6
   },
 
   showMoreContainer: {
@@ -146,5 +185,14 @@ const styles = StyleSheet.create({
     color: global.color.primary,
     fontFamily: global.font.bold,
     fontSize: global.fontSize.body
+  },
+
+  sectionListContainer: {
+    alignSelf: "flex-start",
+    width: "100%",
+    height: 154,
+
+    borderWidth: global.debugMode ? 1 : 0,
+    borderColor: "magenta"
   }
 })

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1069466856598",
+    "project_id": "cateringapp-invfest2022",
+    "storage_bucket": "cateringapp-invfest2022.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1069466856598:android:0628c2851cae9eb8d0e6b7",
+        "android_client_info": {
+          "package_name": "com.catere.ceatering"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1069466856598-681lrmqotdvvm8tesen3ivmjj29v3u8i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.catere.ceatering",
+            "certificate_hash": "8ee01839f3755bc14250fff49ded426ea0e9296c"
+          }
+        },
+        {
+          "client_id": "1069466856598-646lnn4t21lel67h51s8b75ppk41d3k5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpWB_XkH8Q1CRV5GH0WTxsb9DkuMf5nrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1069466856598-646lnn4t21lel67h51s8b75ppk41d3k5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

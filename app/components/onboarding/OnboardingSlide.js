@@ -1,18 +1,10 @@
 import { ImageBackground, View, Text, StyleSheet, StatusBar, Dimensions } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
-import { useFonts, Nunito_400Regular, Nunito_500Medium, Nunito_600SemiBold, Nunito_700Bold } from "@expo-google-fonts/nunito"
 
 import global from "../../config/global"
 
 
 export default function OnboardingSlide({item}) {
-
-  let [fontsLoaded] = useFonts({
-    Nunito_400Regular,
-    Nunito_500Medium,
-    Nunito_600SemiBold,
-    Nunito_700Bold
-  })
 
   return (
     <View style={styles.mainContainer}>

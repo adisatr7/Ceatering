@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "userFrameworks": "static"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,6 +31,11 @@
     "web": {
       "favicon": "./app/assets/favicon.png"
     },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/perf",
+      "@react-native-firebase/crashlytics"
+    ],
     "extra": {
       "eas": {
         "projectId": "a88aa250-6768-4fba-9cb7-b00d55e6ba61"
