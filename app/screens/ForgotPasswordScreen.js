@@ -131,9 +131,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 35,
     paddingHorizontal: 15,
-    elevation: 2,
-    shadowColor: "black",
-    shadowOpacity: 1,
+    elevation: 2
   },
 
   submitButtonText: {

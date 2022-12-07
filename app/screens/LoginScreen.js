@@ -138,11 +138,13 @@ export default function LoginScreen({navigation}) {
         <View style={styles.inputContainer}>
           <Icon name="mail-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
           <TextInput 
-            autoComplete="email" 
             clearButtonMode="always" 
+            autoComplete="email" 
             keyboardType="email-address" 
-            onChangeText={emailInputHandler} 
+            textContentType="emailAddress"
+            returnKeyType="next"
             placeholder="Masukkan alamat e-mail kamu"
+            onChangeText={emailInputHandler} 
             style={styles.emailField} 
           />
         </View>
@@ -153,7 +155,8 @@ export default function LoginScreen({navigation}) {
           <Icon name="lock-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
           <TextInput 
             autoComplete="password"
-            textContentType="password"
+            textContentType="newPassword"
+            returnKeyType="send"
             onChangeText={passwordInputHandler}
             placeholder="Masukkan kata sandi kamu"
             secureTextEntry={!passwordVisibility} 
@@ -326,9 +329,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 35,
     paddingHorizontal: 15,
-    elevation: 2,
-    shadowColor: "black",
-    shadowOpacity: 1,
+    elevation: 2
   },
 
   loginButtonText: {
@@ -347,9 +348,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 15,
     paddingHorizontal: 15,
-    elevation: 2,
-    shadowColor: "black",
-    shadowOpacity: 1
+    elevation: 2
   },
 
   appleIcon: {

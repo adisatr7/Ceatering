@@ -3,12 +3,12 @@ import { ImageBackground, View, Text, StyleSheet, StatusBar, Dimensions, Touchab
 import global from "../config/global"
 
 
-export default function BigCard({vendor}) {
+export default function CardItem({vendor}) {
 
   return (
     <TouchableOpacity activeOpacity={0.7} style={styles.mainContainer} >
-      <Image source={{uri: vendor.image}} style={styles.image}/>
-      <Text numberOfLines={1} style={styles.vendorNameText}>{vendor.name}</Text>
+      <Image source={{uri: vendor.imageUrl}} style={styles.image}/>
+      <Text numberOfLines={2} style={styles.vendorNameText}>{vendor.name}</Text>
       <Text numberOfLines={1} style={styles.vendorAddressText}>{vendor.address}</Text>
     </TouchableOpacity>
   )
@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: "white",
     flexDirection: "column",
+    marginBottom: 2,
     marginRight: 10,
-    height: 150,
-    width: 150,
+    width: 142,
     borderRadius: 10,
     elevation: 2,
     shadowColor: global.shadowColor,
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     height: 100,
-    width: 150,
+    width: 142,
   },
   
   textContainer: {
@@ -53,13 +53,14 @@ const styles = StyleSheet.create({
     fontFamily: global.font.semibold,
     fontSize: global.fontSize.body,
     marginHorizontal: 7,
-    marginTop: 3
+    marginTop: 4
   },
 
   vendorAddressText: {
     color: "grey",
     fontFamily: global.font.regular,
     fontSize: global.fontSize.caption,
+    marginBottom: 10,
     marginHorizontal: 7,
     marginTop: 3
   }

@@ -68,7 +68,7 @@ export default function MainScreen({navigation}) {
 
             else if(route.name === "Profile") {
               if(focused)
-                return <Image source={require("../assets/navigation/nav_profile_inactive.png")} style={styles.icon}/>
+                return <Image source={require("../assets/navigation/nav_profile_active.png")} style={styles.icon}/>
               else
                 return <Image source={require("../assets/navigation/nav_profile_inactive.png")} style={styles.icon}/>
             }
@@ -124,8 +124,6 @@ const styles = StyleSheet.create({
   background: {
     resizeMode: "contain",
     elevation: 2,
-    // shadowColor: global.shadowColor,
-    // shadowOpacity: global.shadowOpacity,
     shadowOffset: { height: 1 },
 
     borderWidth: global.debugMode ? 1 : 0,
@@ -160,8 +158,6 @@ const styles = StyleSheet.create({
     width: 58,
     bottom: 30,
     elevation: 2,
-    shadowColor: global.shadowColor,
-    shadowOpacity: global.shadowOpacity,
     
     borderWidth: global.debugMode ? 1 : 0,
     borderColor: "magenta"

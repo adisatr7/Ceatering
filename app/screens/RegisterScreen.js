@@ -117,10 +117,12 @@ export default function RegisterScreen({navigation}) {
           <Icon name="mail-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
           <TextInput 
             autoComplete="email" 
-            clearButtonMode="always" 
-            onChangeText={emailInputHandler} 
             keyboardType="email-address"
+            textContentType="emailAddress"
+            clearButtonMode="always"
+            returnKeyType="next" 
             placeholder="Masukkan alamat e-mail kamu"
+            onChangeText={emailInputHandler} 
             style={styles.inputField}
           />
         </View>
@@ -132,9 +134,11 @@ export default function RegisterScreen({navigation}) {
           <TextInput 
             autoCapitalize="words" 
             autoComplete="name" 
-            clearButtonMode="always" 
-            onChangeText={usernameInputHandler}
+            textContentType="name"
+            clearButtonMode="always"
+            returnKeyType="next" 
             placeholder="Masukkan nama lengkap kamu"
+            onChangeText={usernameInputHandler}
             style={styles.inputField}
           />
         </View>
@@ -145,7 +149,8 @@ export default function RegisterScreen({navigation}) {
           <Icon name="lock-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
           <TextInput 
             autoComplete="password"
-            textContentType="password"
+            textContentType="newPassword"
+            returnKeyType="next"
             onChangeText={passwordInputHandler}
             placeholder="Masukkan kata sandi kamu"
             secureTextEntry
@@ -160,6 +165,7 @@ export default function RegisterScreen({navigation}) {
           <TextInput 
             autoComplete="password"
             textContentType="password"
+            returnKeyType="send"
             onChangeText={verifyPasswordInputHandler}
             placeholder="Masukkan ulang kata sandi kamu"
             secureTextEntry
@@ -269,9 +275,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 35,
     paddingHorizontal: 15,
-    elevation: 2,
-    shadowColor: "black",
-    shadowOpacity: 1,
+    elevation: 2
   },
 
   registerButtonText: {

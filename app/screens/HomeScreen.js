@@ -1,22 +1,44 @@
+import { useEffect, useState } from "react"
 import { View, Text, StatusBar, StyleSheet, FlatList, ScrollView, TouchableOpacity, Image } from "react-native"
+import { collection, getDocs, query } from "firebase/firestore"
+import { LinearGradient } from "expo-linear-gradient"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useState } from "react"
 import global from "../config/global"
 import Icon from "@expo/vector-icons/MaterialIcons"
 
 import { logout } from "../components/UserAuthentication"
-import BigCard from "../components/BigCard"
+import CardItem from "../components/CardItem"
 import { CartButton } from "../components/Buttons"
-import { collection, getDocs, getFirestore } from "firebase/firestore"
-import { app } from "../config/firebase"
+import { db } from "../config/firebase"
 
-
-const db = getFirestore(app)
 
 export default function HomeScreen() {
 
   const [username, setUsername] = useState("(user)")
   const [hasScrolledDown, setHasScrolledDown] = useState(false)
+
+  // Database related things
+  const [vendors, setVendors] = useState([])
+
+
+  const fetchVendorsData = async() => {
+    const temp = []
+    const querySnapshot = await getDocs(collection(db, "vendors"))
+
+    querySnapshot.forEach(doc => {
+
+      // Destructure fetched object so the data can be combined with vendor ID
+      const { acceptsCustomItem, address, coordinate, imageUrl, name } = doc.data()
+
+      // Push the destructured properties into the array alongside vendor ID
+      temp.push({ vendorId: doc.id, name, address, imageUrl, coordinate, acceptsCustomItem})
+    })
+    setVendors(temp)
+  }
+
+  useEffect(() => {
+    fetchVendorsData()
+  }, [])
 
   const totalReset = async() => {
     await AsyncStorage.removeItem("@isFirstRun")
@@ -44,51 +66,24 @@ export default function HomeScreen() {
 
           {/* Advertisement section */}
           <TouchableOpacity activeOpacity={0.7} style={styles.adContainer} >
-            <Image style={{height: "100%", width: "100%", borderRadius: 10}} source={{uri: "https://cdn0-production-images-kly.akamaized.net/ETx_C-6RiCxqJHnxNe2QJkONrz8=/1200x900/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/844683/original/003049300_1428322197-is.JPG"}}/>
+            <Image style={{height: "100%", width: "100%", borderRadius: 10}} source={{uri: "https://suryasemesta.com/wp-content/uploads/sites/43/2020/04/acf2033b-contoh-kalimat-promosi-makanan-yang-menarik-dan-sering-digunakan.jpg"}}/>
+            <LinearGradient start={{ x: 0.5, y: 0.55 }} end={{ x: 0.5, y: 0.95 }} colors={["transparent", "black"]} style={styles.darkOverlay}/>
             <Text style={styles.adText}>Iklan</Text>
           </TouchableOpacity>
 
           {/* Recommended */}
-          {/* <View style={styles.sectionContainer}>
+          <View style={styles.sectionContainer}>
             <Text style={styles.sectionNameText}>Rekomendasi</Text>
             <View style={styles.sectionListContainer}>
               <FlatList
-                data={data}
-                renderItem={({item}) => <BigCard vendor={item} />}
-                keyExtractor={(item) => item.name}
+                data={vendors}
+                renderItem={({item}) => <CardItem vendor={item} />}
+                keyExtractor={(item) => item.vendorId}
                 horizontal
                 showsHorizontalScrollIndicator={false}
               />
             </View>
-          </View> */}
-          
-          {/* Top Restaurants */}
-          {/* <View style={styles.sectionContainer}>
-            <Text style={styles.sectionNameText}>Populer</Text>
-            <View style={styles.sectionListContainer}>
-              <FlatList
-                data={data}
-                renderItem={({item}) => <BigCard vendor={item} />}
-                keyExtractor={(item) => item.name}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-          </View> */}
-
-          {/* Can handle custom order */}
-          {/* <View style={styles.sectionContainer}>
-            <Text style={styles.sectionNameText}>Bisa Buat Paket Sendiri</Text>
-            <View style={styles.sectionListContainer}>
-              <FlatList
-                data={data}
-                renderItem={({item}) => <BigCard vendor={item} />}
-                keyExtractor={(item) => item.name}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-          </View> */}
+          </View>
 
           {/* Reset button */}
           <Text onPress={resetHandler}>Reset app state</Text>
@@ -147,15 +142,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
+    elevation: 2,
     borderRadius: 10,
     height: 150,
     width: "100%",
     bottom: homeScreenElements.offset,
-    marginBottom: homeScreenElements.marginVertical,
-
-    elevation: 2,
-    shadowColor: global.shadowColor,
-    shadowOpacity: global.shadowOpacity
+    marginBottom: homeScreenElements.marginVertical
   },
 
   adText: {
@@ -163,7 +155,19 @@ const styles = StyleSheet.create({
     fontSize: global.fontSize.body,
     position: "absolute",
     color: "white",
-    bottom: 0
+    bottom: 3,
+  },
+
+  darkOverlay: {
+    opacity: 0.9,
+    borderRadius: 10,
+    height: "50%", 
+    width: "100%",
+    position: "absolute",
+    bottom: 0,
+
+    borderWidth: global.debugMode ? 1 : 0,
+    borderColor: "magenta"
   },
 
   sectionContainer: {
@@ -194,7 +198,6 @@ const styles = StyleSheet.create({
   sectionListContainer: {
     alignSelf: "flex-start",
     width: "100%",
-    height: 154,
 
     borderWidth: global.debugMode ? 1 : 0,
     borderColor: "magenta"
