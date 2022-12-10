@@ -3,13 +3,15 @@ import { ImageBackground, View, Text, StyleSheet, StatusBar, Dimensions, Touchab
 import global from "../config/global"
 
 
-export default function CardItem({vendor}) {
+export default function ItemCard({item}) {
 
   return (
     <TouchableOpacity activeOpacity={0.7} style={styles.mainContainer} >
-      <Image source={{uri: vendor.imageUrl}} style={styles.image}/>
-      <Text numberOfLines={2} style={styles.vendorNameText}>{vendor.name}</Text>
-      <Text numberOfLines={1} style={styles.vendorAddressText}>{vendor.address}</Text>
+      <Image source={{uri: item.imageUrl}} style={styles.image}/>
+      <View style={styles.textContainer}>
+        <Text numberOfLines={2} style={styles.nameText}>{item.name}</Text>
+        <Text numberOfLines={1} style={styles.vendorNameText}>{item.vendorName}</Text>
+      </View>
     </TouchableOpacity>
   )
 }
@@ -18,10 +20,11 @@ export default function CardItem({vendor}) {
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: "white",
-    flexDirection: "column",
-    marginBottom: 2,
-    marginRight: 10,
-    width: 142,
+    flexDirection: "row",
+    marginBottom: 10,
+    paddingRight: 6,
+    height: 75,
+    width: "100%",
     borderRadius: 10,
     elevation: 2,
     shadowColor: global.shadowColor,
@@ -34,29 +37,27 @@ const styles = StyleSheet.create({
   image: {
     alignItems: "center",
     resizeMode: "cover",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    height: 100,
-    width: 142,
+    borderRadius: 10,
+    flex: 1
   },
   
   textContainer: {
     backgroundColor: "white",
-    width: "85%",
+    flex: 3,
 
     borderWidth: global.debugMode ? 1 : 0,
     borderColor: "magenta"
   },
 
-  vendorNameText: {
+  nameText: {
     color: "black",
-    fontFamily: global.font.semibold,
+    fontFamily: global.font.bold,
     fontSize: global.fontSize.body,
     marginHorizontal: 7,
     marginTop: 4
   },
 
-  vendorAddressText: {
+  vendorNameText: {
     color: "grey",
     fontFamily: global.font.regular,
     fontSize: global.fontSize.caption,

@@ -31,13 +31,13 @@ const generateId = () => {
  * @param {*} txt 
  * @returns trigram map
  */
-export const triGram = (txt) => {
+export function triGram(txt) {
   const map = {}
   const s1 = (txt || "").toLowerCase()
   const n = 3
 
   for (let k = 0; k <= s1.length - n; k++) 
-    map[s1.substring(k, k + n)] = true
+    map[s1.substring(k, k+n)] = true
   
   return map
 }
@@ -62,7 +62,7 @@ export const addPost = async(doc) => {
 }
 
 
-export default function SearchBar({style, onEndEditing, onChangeText}) {
+export function SearchBar({style, onEndEditing, onChangeText}) {
   return (
     <View style={[styles.container, style]}>
       <Icon name="search" size={20} style={styles.searchIcon}/>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     height: 40,
-    width: "105%",
+    width: "102%",
     backgroundColor: "white",
     borderColor: global.color.lightGray,
     borderWidth: 1,

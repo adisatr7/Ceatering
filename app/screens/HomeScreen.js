@@ -7,7 +7,7 @@ import global from "../config/global"
 import Icon from "@expo/vector-icons/MaterialIcons"
 
 import { logout } from "../components/UserAuthentication"
-import CardItem from "../components/CardItem"
+import VendorCard from "../components/VendorCard"
 import { CartButton } from "../components/Buttons"
 import { db } from "../config/firebase"
 
@@ -77,7 +77,7 @@ export default function HomeScreen() {
             <View style={styles.sectionListContainer}>
               <FlatList
                 data={vendors}
-                renderItem={({item}) => <CardItem vendor={item} />}
+                renderItem={({item}) => <VendorCard vendor={item} />}
                 keyExtractor={(item) => item.vendorId}
                 horizontal
                 showsHorizontalScrollIndicator={false}
