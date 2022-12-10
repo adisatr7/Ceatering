@@ -143,6 +143,8 @@ export default function LoginScreen({navigation}) {
             keyboardType="email-address" 
             textContentType="emailAddress"
             returnKeyType="next"
+            onSubmitEditing={() => this.passwordInputRef.focus()}
+            blurOnSubmit={false}
             placeholder="Masukkan alamat e-mail kamu"
             onChangeText={emailInputHandler} 
             style={styles.emailField} 
@@ -157,6 +159,8 @@ export default function LoginScreen({navigation}) {
             autoComplete="password"
             textContentType="newPassword"
             returnKeyType="send"
+            ref = {(input) => this.passwordInputRef = input}
+            onSubmitEditing={loginHandler}
             onChangeText={passwordInputHandler}
             placeholder="Masukkan kata sandi kamu"
             secureTextEntry={!passwordVisibility} 

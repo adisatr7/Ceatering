@@ -121,6 +121,8 @@ export default function RegisterScreen({navigation}) {
             textContentType="emailAddress"
             clearButtonMode="always"
             returnKeyType="next" 
+            onSubmitEditing={() => this.usernameInputRef.focus()}
+            blurOnSubmit={false}
             placeholder="Masukkan alamat e-mail kamu"
             onChangeText={emailInputHandler} 
             style={styles.inputField}
@@ -137,6 +139,9 @@ export default function RegisterScreen({navigation}) {
             textContentType="name"
             clearButtonMode="always"
             returnKeyType="next" 
+            ref={input => this.usernameInputRef = input}
+            onSubmitEditing={() => this.passwordInputRef.focus()}
+            blurOnSubmit={false}
             placeholder="Masukkan nama lengkap kamu"
             onChangeText={usernameInputHandler}
             style={styles.inputField}
@@ -151,6 +156,9 @@ export default function RegisterScreen({navigation}) {
             autoComplete="password"
             textContentType="newPassword"
             returnKeyType="next"
+            ref={input => this.passwordInputRef = input}
+            onSubmitEditing={() => this.passwordVerifRef.focus()}
+            blurOnSubmit={false}
             onChangeText={passwordInputHandler}
             placeholder="Masukkan kata sandi kamu"
             secureTextEntry
@@ -166,6 +174,8 @@ export default function RegisterScreen({navigation}) {
             autoComplete="password"
             textContentType="password"
             returnKeyType="send"
+            ref={input => this.passwordVerifRef = input}
+            onSubmitEditing={registerHandler}
             onChangeText={verifyPasswordInputHandler}
             placeholder="Masukkan ulang kata sandi kamu"
             secureTextEntry
