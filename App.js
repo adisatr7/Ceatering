@@ -13,8 +13,8 @@ import OnboardingScreen from "./app/screens/OnboardingScreen"
 import LoginScreen from "./app/screens/LoginScreen"
 import ForgotPasswordScreen from "./app/screens/ForgotPasswordScreen"
 import RegisterScreen from "./app/screens/RegisterScreen"
-import MainScreen from "./app/screens/MainScreen"
-import { auth } from "./app/config/firebase"
+import BottomTabNav from "./app/components/BottomTabNav"
+import VendorScreen from "./app/screens/VendorScreen"
 
 
 const Stack = createStackNavigator()
@@ -44,7 +44,8 @@ export default function App() {
             <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen}/>
             <Stack.Screen name="Register" component={RegisterScreen}/>
-            <Stack.Screen name="Main" component={MainScreen}/>
+            <Stack.Screen name="Main" component={BottomTabNav}/>
+            <Stack.Screen name="Vendor" component={VendorScreen}/>
           </Stack.Navigator>
         </NavigationContainer>
       </View>

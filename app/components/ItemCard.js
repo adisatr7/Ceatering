@@ -3,13 +3,20 @@ import { ImageBackground, View, Text, StyleSheet, StatusBar, Dimensions, Touchab
 import global from "../config/global"
 
 
-export default function ItemCard({item}) {
+export default function ItemCard({item, navigation}) {
+
+  const pressHandler = () => {
+    navigation.navigate("Vendor", item.vendorID)
+  }
+
+  const formattedPrice = item.price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "1.")
 
   return (
-    <TouchableOpacity activeOpacity={0.7} style={styles.mainContainer} >
+    <TouchableOpacity onPress={pressHandler} activeOpacity={0.7} style={styles.mainContainer} >
       <Image source={{uri: item.imageUrl}} style={styles.image}/>
       <View style={styles.textContainer}>
         <Text numberOfLines={2} style={styles.nameText}>{item.name}</Text>
+        <Text numberOfLines={1} style={styles.priceText}>Rp{formattedPrice}</Text>
         <Text numberOfLines={1} style={styles.vendorNameText}>{item.vendorName}</Text>
       </View>
     </TouchableOpacity>
@@ -42,7 +49,6 @@ const styles = StyleSheet.create({
   },
   
   textContainer: {
-    backgroundColor: "white",
     flex: 3,
 
     borderWidth: global.debugMode ? 1 : 0,
@@ -51,18 +57,26 @@ const styles = StyleSheet.create({
 
   nameText: {
     color: "black",
+    fontFamily: global.font.medium,
+    fontSize: global.fontSize.body,
+    marginHorizontal: 10,
+    marginTop: 4
+  },
+
+  priceText: {
+    color: "black",
     fontFamily: global.font.bold,
     fontSize: global.fontSize.body,
-    marginHorizontal: 7,
-    marginTop: 4
+    marginHorizontal: 10,
+    marginTop: 2
   },
 
   vendorNameText: {
     color: "grey",
     fontFamily: global.font.regular,
     fontSize: global.fontSize.caption,
-    marginBottom: 10,
-    marginHorizontal: 7,
-    marginTop: 3
+    marginLeft: 10,
+    marginRight: 8,
+    marginTop: 5
   }
 })
