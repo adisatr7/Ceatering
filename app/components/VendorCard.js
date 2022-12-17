@@ -3,10 +3,10 @@ import { ImageBackground, View, Text, StyleSheet, StatusBar, Dimensions, Touchab
 import global from "../config/global"
 
 
-export default function VendorCard({vendor}) {
+export default function VendorCard({ vendor, onPress }) {
 
   return (
-    <TouchableOpacity activeOpacity={0.7} style={styles.mainContainer} >
+    <TouchableOpacity activeOpacity={0.7} style={styles.mainContainer} onPress={onPress} >
       <Image source={{uri: vendor.imageUrl}} style={styles.image}/>
       <Text numberOfLines={2} style={styles.vendorNameText}>{vendor.name}</Text>
       <Text numberOfLines={1} style={styles.vendorAddressText}>{vendor.address}</Text>

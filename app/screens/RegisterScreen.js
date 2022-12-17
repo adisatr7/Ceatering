@@ -1,9 +1,11 @@
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
 import { useState } from "react"
 import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons"
 
 import { BackButton } from "../components/Buttons"
-import { auth } from "../config/firebase"
+import { auth, db } from "../config/firebase"
 import global from "../config/global"
 import strings from "../config/strings"
 
@@ -56,6 +58,9 @@ export default function RegisterScreen({navigation}) {
           user.displayName = username
           console.log(`Sign up successful user "${email}"!`)
 
+          // Add new user data to "users" collection in Firestore
+          newUserProfile(user.uid, username, email)
+
           // A verification code is sent to user's email address
           // BUG: Unhandled promise
           sendEmailVerification(user, { handleCodeInApp: true,  })
@@ -82,17 +87,32 @@ export default function RegisterScreen({navigation}) {
           Alert.alert(strings.alert.networkError.title, strings.alert.networkError.desc)
           
         // Email already in use
-        if(error.code === "auth/email-already-in-use")
+        if(error.code === "auth/email-already-in-use") {
           Alert.alert(strings.alert.emailInUse.title, strings.alert.emailInUse.desc, [
             { text: "Masuk", onPress: navigation.navigate("Login") }, { text: "Tutup" }
           ])
+          gotoLoginScreen()
+        }
       })
     }
   }
 
-  // Go to Verify E-mail screen
-  const gotoMainScreen = () => {
-    navigation.replace("Main")
+  /**
+   * Adds newly created user data into "users" collection in Firestore
+   * 
+   * @param {*} uid User ID 
+   * @param {*} displayName User's real name
+   * @param {*} email User's email, used to login
+   */
+  const newUserProfile = async(uid, displayName, email) => {
+    await setDoc(doc(db, "users", uid), {
+      displayName: displayName,
+      email: email,
+      exp: 0,
+      imageUrl: "",
+      level: 1
+    })
+    .catch(error => console.log(error.code))
   }
 
   // Go to Login screen
@@ -116,7 +136,9 @@ export default function RegisterScreen({navigation}) {
         <View style={styles.inputContainer}>
           <Icon name="mail-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
           <TextInput 
-            autoComplete="email" 
+            autoComplete="email"
+            autoCapitalize="none"
+            autoFocus
             keyboardType="email-address"
             textContentType="emailAddress"
             clearButtonMode="always"
@@ -169,13 +191,12 @@ export default function RegisterScreen({navigation}) {
         { /* Verify password input */ }
         <Text style={styles.inputLabel}>Konfirmasi Kata Sandi</Text>
         <View style={styles.inputContainer}>
-        <Icon name="lock-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
+          <Icon name="lock-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
           <TextInput 
             autoComplete="password"
             textContentType="password"
             returnKeyType="send"
             ref={input => this.passwordVerifRef = input}
-            onSubmitEditing={registerHandler}
             onChangeText={verifyPasswordInputHandler}
             placeholder="Masukkan ulang kata sandi kamu"
             secureTextEntry

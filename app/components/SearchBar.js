@@ -4,11 +4,12 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import global from "../config/global"
 
 
-export function SearchBar({style, onChangeText}) {
+export default function SearchBar({style, onChangeText}) {
   return (
     <View style={[styles.container, style]}>
       <Icon name="search" size={20} style={styles.searchIcon}/>
       <TextInput 
+        autoFocus
         keyboardType="web-search"
         returnKeyType="search"
         onChangeText={onChangeText} 

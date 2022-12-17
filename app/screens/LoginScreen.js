@@ -138,8 +138,9 @@ export default function LoginScreen({navigation}) {
         <View style={styles.inputContainer}>
           <Icon name="mail-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
           <TextInput 
-            clearButtonMode="always" 
+            autoCapitalize="none"
             autoComplete="email" 
+            clearButtonMode="always" 
             keyboardType="email-address" 
             textContentType="emailAddress"
             returnKeyType="next"

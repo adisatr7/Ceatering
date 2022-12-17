@@ -1,12 +1,12 @@
-import { ImageBackground, View, Text, StyleSheet, StatusBar, Dimensions, TouchableOpacity, Image } from "react-native"
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image } from "react-native"
 
 import global from "../config/global"
 
 
-export default function ItemCard({item, navigation}) {
+export default function BundleCard({item, navigation}) {
 
   const pressHandler = () => {
-    navigation.navigate("Vendor", item.vendorID)
+    navigation.navigate("Vendor", {vendorID: item.vendorID})
   }
 
   const formattedPrice = item.price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "1.")
@@ -17,7 +17,6 @@ export default function ItemCard({item, navigation}) {
       <View style={styles.textContainer}>
         <Text numberOfLines={2} style={styles.nameText}>{item.name}</Text>
         <Text numberOfLines={1} style={styles.priceText}>Rp{formattedPrice}</Text>
-        <Text numberOfLines={1} style={styles.vendorNameText}>{item.vendorName}</Text>
       </View>
     </TouchableOpacity>
   )

@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 
   darkOverlay: {
     opacity: 0.9,
-    height: "50%", 
+    height: "80%", 
     width: "100%",
     position: "absolute",
     bottom: 0,
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: global.font.regular,
     fontSize: global.fontSize.body,
+    marginRight: 20,
     marginVertical: 24
   }
 })

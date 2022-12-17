@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "flex-end",
     backgroundColor: "green",
-    borderRadius: 7,
+    borderRadius: 6,
     paddingVertical: 4,
     paddingHorizontal: 12,
     

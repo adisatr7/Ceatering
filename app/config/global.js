@@ -7,7 +7,7 @@ export default {
   color: {
     primary: "#19B200",
     secondary: "",
-    statusBar: "rgba(0, 0, 0, 0.3)",
+    statusBar: "rgba(0, 0, 0, 0.4)",
     lightGray: "#c7c7c7"
   },
 

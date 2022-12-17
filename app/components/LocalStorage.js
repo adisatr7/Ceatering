@@ -59,3 +59,16 @@ export const loadObject = async (key) => {
     console.log(e)
   }
 }
+
+/**
+ * Removes any data stored within given key
+ * @param {*} key 
+ */
+export const deleteData = async(key) => {
+  try {
+    await AsyncStorage.removeItem(key)
+    console.log(`Data stored within key '${key}' has been deleted!`)
+  } catch(e) {
+    console.log(e)
+  }
+}

@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { FlatList, StatusBar, StyleSheet, Text, View } from "react-native"
 import { collection, doc, getDoc, getDocs, limit, query, where } from "firebase/firestore"
 
 import { db } from "../config/firebase"
 import global from "../config/global"
-import { SearchBar, triGram} from "../components/SearchBar"
-import ItemCard from "../components/ItemCard"
+import SearchBar from "../components/SearchBar"
+import SearchResultCard from "../components/SearchResultCard"
 import VendorScreen from "./VendorScreen"
 
 
@@ -38,7 +38,7 @@ export default function SearchScreen({navigation}) {
     let tempArray = []
     querySnapshot.forEach(doc => {
 
-      // Push fetched bundles data into the temporary array
+      // Push fetched data into said temporary array
       const data = doc.data()
       data["id"] = doc.id
       data["isBundle"] = true
@@ -55,7 +55,7 @@ export default function SearchScreen({navigation}) {
 
     // Updates the main results array and counter
     setResultArray(tempArray)
-    setResultsCounter(tempArray.length)
+    setResultsCounter(tempArray.length -1)
   }
   
   /**
@@ -86,6 +86,11 @@ export default function SearchScreen({navigation}) {
     }
   }
 
+  const renderResultCounter = () => {
+    if(resultsCounter > 0 && keyword.length !== 0)
+      return <Text style={styles.resultsCounterText}>Menampilkan {resultsCounter} makanan</Text>
+  }
+
   useEffect(() => {
     searchHandler()
   }, [keyword])
@@ -96,34 +101,31 @@ export default function SearchScreen({navigation}) {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.floatingHeaderContainer}>
+      <View style={styles.headerContainer}>
         <SearchBar onChangeText={searchInputHandler}/>
-        {/* <Text style={styles.resultsCounterText}>Menampilkan 12 makanan</Text> */}
+        { renderResultCounter() }
       </View>
       
       <View style={styles.resultsCardContainer}>
         <FlatList
-          contentContainerStyle={{ paddingBottom: 75, paddingTop: 7 }}
+          contentContainerStyle={ resultsCounter !== 0 ? { paddingBottom: 75, paddingTop: 5 } : {}}
           data={resultArray}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) => {
 
-            // if(item.isEmpty)
-            //   return <Text style={styles.centerText}>Hasil pencarian kamu akan muncul disini.</Text>
-
             if(item.searchNotFound)
               return <Text style={styles.centerText}>Ups, sepertinya makanan yang kamu cari belum terdaftar.</Text>
-
+              
             else if(item.isLastItem)
               return <Text style={styles.endOfResultText}>Akhir dari hasil pencarian.</Text>
 
-            return <ItemCard onPress={gotoVendorScreen} item={item} navigation={navigation}/>
+            return <SearchResultCard onPress={gotoVendorScreen} item={item} navigation={navigation}/>
           }}
         />
       </View>
       
-      <StatusBar animated translucent backgroundColor={"transparent"} barStyle="dark-content"/>
+      <StatusBar animated translucent backgroundColor={global.color.statusBar} barStyle="light-content"/>
     </View>
   )
 }
@@ -131,22 +133,20 @@ export default function SearchScreen({navigation}) {
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: "white",
-    flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    height: "100%",
     width: "100%",
     paddingHorizontal: "5%",
-    paddingTop: 40,
 
     borderWidth: global.debugMode ? 1 : 0,
     borderColor: "magenta"
   },
 
-  floatingHeaderContainer: {
-    position: "absolute",
+  headerContainer: {
     width: "100%",
-    top: StatusBar.currentHeight + 10,
+    marginBottom: 10,
+    marginTop: StatusBar.currentHeight + 10,
     zIndex: 1,
 
     borderWidth: global.debugMode ? 1 : 0,
@@ -154,16 +154,15 @@ const styles = StyleSheet.create({
   },
 
   resultsCounterText: {
-    color: "black",
+    color: "gray",
     fontFamily: global.font.regular,
     fontSize: global.fontSize.body,
-    marginTop: 10,
+    marginLeft: 1,
+    marginTop: 8
   },
 
   resultsCardContainer: {
-    height: "90%",
     width: "100%",
-    top: 10,
     zIndex: 0,
 
     borderWidth: global.debugMode ? 1 : 0,
@@ -177,7 +176,7 @@ const styles = StyleSheet.create({
     fontFamily: global.font.regular,
     fontSize: global.fontSize.body,
     marginHorizontal: 60,
-    marginVertical: 265
+    marginVertical: "80%"
   },
 
   endOfResultText: {

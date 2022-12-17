@@ -35,6 +35,7 @@ export default function ForgotpasswordScreen({navigation}) {
         <View style={styles.inputContainer}>
           <Icon name="mail-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
           <TextInput 
+            autoCapitalize="none"
             autoComplete="email" 
             clearButtonMode="always" 
             keyboardType="email-address" 

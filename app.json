@@ -35,6 +35,14 @@
       "eas": {
         "projectId": "a88aa250-6768-4fba-9cb7-b00d55e6ba61"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you upload new profile pictures."
+        }
+      ]
+    ]
   }
 }

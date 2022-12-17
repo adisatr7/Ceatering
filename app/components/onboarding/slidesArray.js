@@ -8,13 +8,13 @@ export default [
   {
     id: '2',
     header: "Serahkan Semua Pada Kami",
-    caption: "Bingung ingin makan apa? Biar kami yang menentukan menu makanan Anda!",
+    caption: "Ingin pesan sekali saja atau langganan rutin? Kami bisa layani keduanya!",
     background: require(`../../assets/onboarding/2.png`)
   },
   {
     id: '3',
-    header: "Atur Menu Harian Anda",
-    caption: "Anda juga bisa mengatur ingin makan apa setiap harinya!",
+    header: "Pesan Apa Yang Anda Inginkan",
+    caption: "Kurang suka dengan apa yang Anda dapatkan di pesanan paket? Buat paket makanan Anda sendiri!",
     background: require(`../../assets/onboarding/3.png`)
   }
 ]

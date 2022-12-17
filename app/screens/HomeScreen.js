@@ -12,7 +12,7 @@ import { CartButton } from "../components/Buttons"
 import { db } from "../config/firebase"
 
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
 
   const [username, setUsername] = useState("(user)")
   const [hasScrolledDown, setHasScrolledDown] = useState(false)
@@ -31,7 +31,7 @@ export default function HomeScreen() {
       const { acceptsCustomItem, address, coordinate, imageUrl, name } = doc.data()
 
       // Push the destructured properties into the array alongside vendor ID
-      temp.push({ vendorId: doc.id, name, address, imageUrl, coordinate, acceptsCustomItem})
+      temp.push({ vendorID: doc.id, name, address, imageUrl, coordinate, acceptsCustomItem})
     })
     setVendors(temp)
   }
@@ -40,23 +40,10 @@ export default function HomeScreen() {
     fetchVendorsData()
   }, [])
 
-  const totalReset = async() => {
-    await AsyncStorage.removeItem("@isFirstRun")
-  }
-
-  const resetHandler = () => {
-    alert("Commencing total reset...")
-    totalReset()
-  }
-
-  const logoutHandler = () => {
-    alert("Logging out...")
-    logout()
-  }
-
   return (
     <View>
       <ScrollView style={styles.scrollContainer}>
+        
         {/* Header */}
         <View style={styles.greenBackground}>
           <Text style={styles.headerText}>Beranda</Text>
@@ -77,20 +64,13 @@ export default function HomeScreen() {
             <View style={styles.sectionListContainer}>
               <FlatList
                 data={vendors}
-                renderItem={({item}) => <VendorCard vendor={item} />}
-                keyExtractor={(item) => item.vendorId}
+                renderItem={({item}) => <VendorCard vendor={item} onPress={() => navigation.navigate("Vendor", { vendorID: item.vendorID } )} />}
+                keyExtractor={(item) => item.vendorID}
                 horizontal
                 showsHorizontalScrollIndicator={false}
               />
             </View>
           </View>
-
-          {/* Reset button */}
-          <Text onPress={resetHandler}>Reset app state</Text>
-
-          {/* Logout button */}
-          <Text onPress={logoutHandler}>Logout</Text>
-
         </View>
       </ScrollView>
       
