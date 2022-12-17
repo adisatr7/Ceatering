@@ -98,7 +98,7 @@ export default function EditProfileScreen({navigation, route}) {
         
         <BackButton navigation={navigation} />
 
-        { /* Greetings text */ }
+        { /* Screen title text */ }
         <Text style={styles.headerText}>Ubah Profil</Text>
 
         {/* Profile picture */}

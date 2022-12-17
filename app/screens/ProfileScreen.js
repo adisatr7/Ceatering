@@ -54,6 +54,18 @@ export default function ProfileScreen({navigation}) {
     navigation.navigate("EditPassword", { user: user })
   }
 
+  const gotoSavedAddresses = () => {
+    navigation.navigate("Addresses")
+  }
+
+  const gotoHelpCenter = () => {
+    navigation.navigate("Help")
+  }
+
+  const gotoSettings = () => {
+    navigation.navigate("Settings")
+  }
+
   useEffect(() => {
     fetchUserData()
   }, [])
@@ -133,13 +145,13 @@ export default function ProfileScreen({navigation}) {
         <ProfileScreenButton icon={"ribbon-outline"} text={"Misi Harian"}/>
 
         {/* Go to Address Manager screen */}
-        <ProfileScreenButton icon={"location-outline"} text={"Alamat Tersimpan"}/>
+        <ProfileScreenButton icon={"location-outline"} text={"Alamat Tersimpan"} onPress={gotoSavedAddresses}/>
 
         {/* Go to Help Center screen */}
-        <ProfileScreenButton icon={"information-circle-outline"} text={"Pusat Bantuan"}/>
+        <ProfileScreenButton icon={"information-circle-outline"} text={"Pusat Bantuan"} onPress={gotoHelpCenter}/>
 
         {/* Go to Settings screen */}
-        <ProfileScreenButton icon={"settings-outline"} text={"Pengaturan"}/>
+        <ProfileScreenButton icon={"settings-outline"} text={"Pengaturan"} onPress={gotoSettings}/>
 
         {/* Logout Button */}
         <ProfileScreenButton icon={"log-out-outline"} text={"Keluar"} onPress={logoutHandler}/>

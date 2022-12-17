@@ -17,6 +17,9 @@ import BottomTabNav from "./app/components/BottomTabNav"
 import VendorScreen from "./app/screens/VendorScreen"
 import EditProfileScreen from "./app/screens/EditProfileScreen"
 import EditPasswordScreen from "./app/screens/EditPasswordScreen"
+import SettingsScreen from "./app/screens/SettingsScreen"
+import HelpCenterScreen from "./app/screens/HelpCenterScreen"
+import SavedAddressesScreen from "./app/screens/SavedAddressesScreen"
 
 const Stack = createStackNavigator()
 
@@ -33,10 +36,8 @@ export default function App() {
   let [fontsLoaded] = useFonts(global.fontArray)
   if(!fontsLoaded)
     <AppLoading/>
+  
   else
-
-    // return <MainScreen/>
-
     return (
       <View style={styles.container}>
         <NavigationContainer>
@@ -49,6 +50,9 @@ export default function App() {
             <Stack.Screen name="Vendor" component={VendorScreen}/>
             <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
             <Stack.Screen name="EditPassword" component={EditPasswordScreen}/>
+            <Stack.Screen name="Addresses" component={SavedAddressesScreen}/>
+            <Stack.Screen name="Help" component={HelpCenterScreen}/>
+            <Stack.Screen name="Settings" component={SettingsScreen}/>
           </Stack.Navigator>
         </NavigationContainer>
       </View>

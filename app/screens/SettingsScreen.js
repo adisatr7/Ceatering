@@ -6,29 +6,7 @@ import { BackButton } from "../components/Buttons"
 import global from "../config/global"
 
 
-export default function EditPasswordScreen({navigation, route}) {
-
-  // Get user's current (old) email and display name
-  const {user} = route.params
-
-  // Input hooks
-  const [oldPasswordInput, setOldPasswordInput] = useState("")
-  const [newPasswordInput, setNewPasswordInput] = useState("")
-  const [newPasswordVerifInput, setNewPasswordVerifInput] = useState("")
-
-
-  // Input handlers
-  const oldPasswordInputHandler = (enteredText) => {
-    setOldPasswordInput(enteredText)
-  }
-
-  const onewPasswordInputHandler = (enteredText) => {
-    setNewPasswordInput(enteredText)
-  }
-
-  const newPasswordVerifInputHandler = (enteredText) => {
-    setNewPasswordVerifInput(enteredText)
-  }
+export default function SettingsScreen({navigation}) {
 
   const submitHandler = () => {
     // TODO: Implement!
@@ -43,56 +21,9 @@ export default function EditPasswordScreen({navigation, route}) {
         <BackButton navigation={navigation} />
 
         { /* Screen title text */ }
-        <Text style={styles.headerText}>Ubah Kata Sandi</Text>
+        <Text style={styles.headerText}>Pengaturan</Text>
 
-        { /* Old password input */ }
-        <Text style={styles.inputLabel}>Kata Sandi Lama</Text>
-        <View style={styles.inputContainer}>
-          <TextInput 
-            placeholder="Masukkan kata sandi lama kamu"
-            textContentType="password"
-            autoComplete="off"
-            returnKeyType="next"
-            // onSubmitEditing={() => this.newPasswordRef.focus()}
-            blurOnSubmit={false}
-            onChangeText={oldPasswordInputHandler}
-            secureTextEntry
-            style={styles.inputField} 
-          />
-        </View>
-
-        { /* New password input */ }
-        <Text style={styles.inputLabel}>Kata Sandi Baru</Text>
-        <View style={styles.inputContainer}>
-          <TextInput 
-            placeholder="Masukkan kata sandi baru kamu"
-            autoComplete="password-new"
-            textContentType="newPassword"
-            returnKeyType="next"
-            // ref={input => this.newPasswordRef = input}
-            // onSubmitEditing={() => this.newPasswordVerifRef.focus()}
-            onChangeText={newPasswordVerifInputHandler}
-            secureTextEntry
-            style={styles.inputField} 
-          />
-        </View>
-
-        { /* Verify password input */ }
-        <Text style={styles.inputLabel}>Ulangi Kata Sandi Baru</Text>
-        <View style={styles.inputContainer}>
-          <TextInput 
-            placeholder="Masukkan lagi kata sandi baru kamu"
-            autoComplete="password-new"
-            textContentType="newPassword"
-            returnKeyType="done"
-            // ref={input => this.newPasswordVerifRef = input}
-            onSubmitEditing={submitHandler}
-            onChangeText={newPasswordVerifInputHandler}
-            secureTextEntry
-            style={styles.inputField} 
-          />
-        </View>
-
+        {/* TODO: Add the actual settings thingy */}
 
         { /* Submit button */ }
         <TouchableOpacity activeOpacity={0.7} style={styles.submitButton} onPress={submitHandler}>
