@@ -50,6 +50,10 @@ export default function ProfileScreen({navigation}) {
     navigation.navigate("EditProfile", { user: user })
   }
 
+  const gotoEditPassword = () => {
+    navigation.navigate("EditPassword", { user: user })
+  }
+
   useEffect(() => {
     fetchUserData()
   }, [])
@@ -123,7 +127,7 @@ export default function ProfileScreen({navigation}) {
         <ProfileScreenButton icon={"create-outline"} text={"Ubah profil"} onPress={gotoEditProfile}/>
 
         {/* Go to Change Password screen */}
-        <ProfileScreenButton icon={"key-outline"} text={"Ubah Kata Sandi"}/>
+        <ProfileScreenButton icon={"key-outline"} text={"Ubah Kata Sandi"} onPress={gotoEditPassword}/>
 
         {/* Go to Gamification screen */}
         <ProfileScreenButton icon={"ribbon-outline"} text={"Misi Harian"}/>

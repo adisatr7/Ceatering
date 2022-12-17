@@ -16,7 +16,7 @@ import RegisterScreen from "./app/screens/RegisterScreen"
 import BottomTabNav from "./app/components/BottomTabNav"
 import VendorScreen from "./app/screens/VendorScreen"
 import EditProfileScreen from "./app/screens/EditProfileScreen"
-
+import EditPasswordScreen from "./app/screens/EditPasswordScreen"
 
 const Stack = createStackNavigator()
 
@@ -48,6 +48,7 @@ export default function App() {
             <Stack.Screen name="Main" component={BottomTabNav}/>
             <Stack.Screen name="Vendor" component={VendorScreen}/>
             <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
+            <Stack.Screen name="EditPassword" component={EditPasswordScreen}/>
           </Stack.Navigator>
         </NavigationContainer>
       </View>
