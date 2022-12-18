@@ -136,7 +136,7 @@ export default function EditProfileScreen({navigation, route}) {
       <LoadingModal title="Menyimpan Perubahan" caption="Data profil baru kamu sedang disimpan" visible={isLoading} />
 
       {/* Prompts user to reenter password when Submit button is clicked */}
-      <PasswordPromptModal visible={showPrompt} onSuccess={confirmChanges}/>
+      <PasswordPromptModal visible={showPrompt} onSuccess={confirmChanges} onCancel={() => setShowPrompt(false)} />
 
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>  
         <BackButton navigation={navigation} />

@@ -1,4 +1,4 @@
-import { Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Image, Modal, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 
 import global from "../config/global"
 import { useState } from "react"
@@ -6,7 +6,7 @@ import { auth } from "../config/firebase"
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth"
 
 
-export default function PasswordPromptModal({visible, onSuccess}) {
+export default function PasswordPromptModal({visible, onSuccess, onCancel}) {
 
   // Toggle password visibility handler
   const [passwordVisibility, setPasswordVisibility] = useState(false)
@@ -64,7 +64,7 @@ export default function PasswordPromptModal({visible, onSuccess}) {
 
   return (
     <Modal animationType="fade" transparent visible={visible}>
-      <View style={styles.darkOverlay}>
+      <Pressable style={styles.darkOverlay} onPress={onCancel}>
         <View style={styles.container}>
           
           {/* Header and caption text */}
@@ -93,13 +93,23 @@ export default function PasswordPromptModal({visible, onSuccess}) {
         {/* Error message if user tries to submit an empty password */}
         <Text style={styles.redCaption}>{warningText}</Text>
         
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+
+          { /* Cancel button */ }
+          <TouchableOpacity activeOpacity={0.7} style={styles.cancelButton} onPress={onCancel}>
+            <Text style={styles.submitButtonText}>Batalkan</Text>
+          </TouchableOpacity>
+
           { /* Submit button */ }
-        <TouchableOpacity activeOpacity={0.7} style={styles.submitButton} onPress={submitHandler}>
-          <Text style={styles.submitButtonText}>Simpan</Text>
-        </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.7} style={styles.submitButton} onPress={submitHandler}>
+            <Text style={styles.submitButtonText}>Simpan</Text>
+          </TouchableOpacity>
 
         </View>
-      </View>
+
+
+        </View>
+      </Pressable>
     </Modal>
   )
 }
@@ -173,23 +183,23 @@ const styles = StyleSheet.create({
     width: 20
   },
 
-  cancelButton: {
-    backgroundColor: global.color.primary,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-end",
-    height: 40,
-    width: "100%",
-    marginTop: 35,
-    paddingHorizontal: 15,
-    elevation: 2
-  },
-
   cancelButtonText: {
     color: "white",
     fontFamily: global.font.bold,
     fontSize: global.fontSize.body
+  },
+
+  cancelButton: {
+    backgroundColor: "silver",
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    height: 40,
+    // width: "100%",
+    marginTop: 30,
+    paddingHorizontal: 25,
+    elevation: 2
   },
 
   submitButton: {
@@ -199,7 +209,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     height: 40,
-    width: "100%",
+    // width: "100%",
     marginTop: 30,
     paddingHorizontal: 25,
     elevation: 2
