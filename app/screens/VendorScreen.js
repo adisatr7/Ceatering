@@ -1,5 +1,6 @@
+import { useFocusEffect } from "@react-navigation/native"
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { FlatList, Image, StyleSheet, Text, View } from "react-native"
 import { db } from "../config/firebase"
 import global from "../config/global"
@@ -47,20 +48,22 @@ export default function VendorScreen({ navigation, route }) {
     setBundlesArray(temp)
   }
 
-  useEffect(() => {
-    const temp = []
+  useFocusEffect(
+    useCallback(() => {
+      const temp = []
 
-    fetchVendorData(vendorID)
-    temp.push(vendor)
+      fetchVendorData(vendorID)
+      temp.push(vendor)
 
-    fetchBundlesData(vendorID)
-    for(let bundle of bundlesArray) {
-      temp.push(bundle)
-    }
+      fetchBundlesData(vendorID)
+      for(let bundle of bundlesArray) {
+        temp.push(bundle)
+      }
 
-    setItemList(temp)
-    console.log(itemList)
-  }, [])
+      setItemList(temp)
+      console.log(itemList)
+    }, [])
+  )
   
   return (
     <View style={styles.mainContainer}>

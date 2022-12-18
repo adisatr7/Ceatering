@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { FlatList, StatusBar, StyleSheet, Text, View } from "react-native"
 import { collection, doc, getDoc, getDocs, limit, query, where } from "firebase/firestore"
 
@@ -7,6 +7,7 @@ import global from "../config/global"
 import SearchBar from "../components/SearchBar"
 import SearchResultCard from "../components/SearchResultCard"
 import VendorScreen from "./VendorScreen"
+import { useFocusEffect } from "@react-navigation/native"
 
 
 export default function SearchScreen({navigation}) {
@@ -91,9 +92,11 @@ export default function SearchScreen({navigation}) {
       return <Text style={styles.resultsCounterText}>Menampilkan {resultsCounter} makanan</Text>
   }
 
-  useEffect(() => {
-    searchHandler()
-  }, [keyword])
+  useFocusEffect(
+    useCallback(() => {
+      searchHandler()
+    }, [keyword])
+  )
 
   const gotoVendorScreen = (vendorID) => {
     navigation.navigate(VendorScreen({vendorID: vendorID}))
@@ -108,7 +111,7 @@ export default function SearchScreen({navigation}) {
       
       <View style={styles.resultsCardContainer}>
         <FlatList
-          contentContainerStyle={ resultsCounter !== 0 ? { paddingBottom: 75, paddingTop: 5 } : {}}
+          contentContainerStyle={ resultsCounter !== 0 ? { paddingTop: 5 } : {}}
           data={resultArray}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
@@ -184,6 +187,7 @@ const styles = StyleSheet.create({
     color: "grey",
     fontFamily: global.font.regular,
     fontSize: global.fontSize.caption,
-    marginTop: 5
+    marginTop: 5,
+    marginBottom: 200
   }
 })

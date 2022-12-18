@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { View, Text, StyleSheet, FlatList, StatusBar, Animated, TouchableOpacity } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons"
 
@@ -7,6 +7,7 @@ import slides from "../components/onboarding/slidesArray"
 import OnboardingSlide from "../components/onboarding/OnboardingSlide"
 import global from "../config/global"
 import Paginator from "../components/onboarding/Paginator"
+import { useFocusEffect } from "@react-navigation/native"
 
 
 export default function OnboardingScreen({navigation}) {
@@ -85,9 +86,11 @@ export default function OnboardingScreen({navigation}) {
     })
   }
   
-  useEffect(() => {
-    checkIfFirstTime()
-  })
+  useFocusEffect(
+    useCallback(() => {
+      checkIfFirstTime()
+    }, [])
+  )
   
   // -- Main --
   return (

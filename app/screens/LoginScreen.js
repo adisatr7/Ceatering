@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Alert, Text, SafeAreaView, StyleSheet, StatusBar, View, Image, TextInput, Pressable, TouchableOpacity, ScrollView } from "react-native"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword } from "firebase/auth"
 import { useAuthRequest } from "expo-auth-session/providers/google"
 import Icon from "react-native-vector-icons/MaterialIcons"
 
 import { auth } from "../config/firebase"
 import global from "../config/global"
 import strings from "../config/strings"
+import LoadingModal from "../components/LoadingModal"
 
 
 
 export default function LoginScreen({navigation}) {
+
+  // Loading animation hook
+  const [isLoading, setIsLoading] = useState(true)
 
   // Toggle password visibility handler
   const [passwordVisibility, setPasswordVisibility] = useState(false)
@@ -49,6 +53,9 @@ export default function LoginScreen({navigation}) {
     
     else {
 
+      // Starts loading animation
+      setIsLoading(true)
+
       // Login process
       console.log(`Signing in user "${email}"...`)
   
@@ -59,6 +66,9 @@ export default function LoginScreen({navigation}) {
         })
         .catch((error) => {
           console.log(error.code, error.message)
+
+          // Stops loading animation
+          setIsLoading(false)
 
           // Input is not an email
           if(error.code === "auth/invalid-email")
@@ -83,16 +93,20 @@ export default function LoginScreen({navigation}) {
     }
   }
   
-  // This part is where user skips the Login screen entirely if they have logged in
+  // This part is where user skips the Login screen entirely if they have logged in before
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if(user) {
         console.log(`Login successful user ${user.uid}!`)
+        setIsLoading(false)
         gotoMainScreen()
+        
+        return unsubscribe
       }
+      else
+        setIsLoading(false)
     })
-    return unsubscribe
-  }, [])
+  })
 
   // Login with Google account handler
   const [request, response, promptAsync] = useAuthRequest({
@@ -110,7 +124,7 @@ export default function LoginScreen({navigation}) {
 
   // Go to Registration up screen
   const gotoRegister = () => {
-    navigation.navigate("Register")
+    navigation.navigate("Register", {isOnAnotherScreen: isLoading})
   }
 
   // Go to Forgot Password screen
@@ -126,6 +140,10 @@ export default function LoginScreen({navigation}) {
   // -- Main --
   return (
     <SafeAreaView style={styles.background}>
+
+      {/* Loading animation */}
+      <LoadingModal title="Tunggu sebentar" caption="Menghubungkan ke server..." visible={isLoading}/>
+
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
         <Image style={global.styles.brandlogo} source={require("../assets/brandlogo_colored.png")} />
 

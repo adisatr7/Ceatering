@@ -1,18 +1,23 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth"
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth"
 import { doc, setDoc } from "firebase/firestore"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons"
 
 import { BackButton } from "../components/Buttons"
+import LoadingModal from "../components/LoadingModal"
+import LoadingFinishedModal from "../components/LoadingModal"
 import { auth, db } from "../config/firebase"
 import global from "../config/global"
 import strings from "../config/strings"
 
 
-export default function RegisterScreen({navigation}) {
+export default function RegisterScreen({navigation, route}) {
 
-  // Input handler
+  // Loading animation hook
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Input hook and handler
   const [email, setEmail] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
@@ -49,30 +54,39 @@ export default function RegisterScreen({navigation}) {
 
     else {
 
+      // Plays animation
+      setIsLoading(true)
+
       // Register process
       console.log(`Registering new user "${email}"...`)
 
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredentials) => {
           const user = userCredentials.user
-          user.displayName = username
+          updateProfile(user, {displayName: username})
           console.log(`Sign up successful user "${email}"!`)
 
           // Add new user data to "users" collection in Firestore
           newUserProfile(user.uid, username, email)
-
+          
+          // Stops animation
+          setIsLoading(false)
+          
           // A verification code is sent to user's email address
           // BUG: Unhandled promise
-          sendEmailVerification(user, { handleCodeInApp: true,  })
-            .then(() => {
-              // Enter something here
-            })
-            .catch((error) => {
-              console.log(error.code)
-            })
+          sendEmailVerification(user)
+          .then(() => {
+            // Enter something here
+          })
+          .catch((error) => {
+            console.log(error.code)
+          })
         })
         .catch((error) => {
         console.log(error.code, error.message)
+
+        // Stops animation
+        setIsLoading(false)
 
         // Input is not an email
         if(error.code === "auth/invalid-email")
@@ -89,9 +103,8 @@ export default function RegisterScreen({navigation}) {
         // Email already in use
         if(error.code === "auth/email-already-in-use") {
           Alert.alert(strings.alert.emailInUse.title, strings.alert.emailInUse.desc, [
-            { text: "Masuk", onPress: navigation.navigate("Login") }, { text: "Tutup" }
+            { text: "Masuk", onPress: gotoLoginScreen() }, { text: "Tutup" }
           ])
-          gotoLoginScreen()
         }
       })
     }
@@ -115,14 +128,27 @@ export default function RegisterScreen({navigation}) {
     .catch(error => console.log(error.code))
   }
 
+
   // Go to Login screen
   const gotoLoginScreen = () => {
     navigation.navigate("Login")
   }
 
+  const onAnimationFinish = () => {
+    gotoLoginScreen()
+    setIsLoading(false)
+  }
+
+
   // -- Main --
   return (
     <SafeAreaView style={styles.background}>
+      
+      {/* (DOES NOT WORK ON ANDROID) Animation that plays when user successfully created a nea account */}
+      {/* <LoadingFinishedModal visible={animationIsPlaying} onFinish={onAnimationFinish}/> */}
+
+      <LoadingModal title="Tunggu sebentar" caption="Menghubungkan ke server..." visible={isLoading}/>
+      
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
         
         <BackButton navigation={navigation} />
@@ -143,6 +169,7 @@ export default function RegisterScreen({navigation}) {
             textContentType="emailAddress"
             clearButtonMode="always"
             returnKeyType="next" 
+            ref={input => this.emailInputRef = input}
             onSubmitEditing={() => this.usernameInputRef.focus()}
             blurOnSubmit={false}
             placeholder="Masukkan alamat e-mail kamu"
@@ -197,6 +224,7 @@ export default function RegisterScreen({navigation}) {
             textContentType="password"
             returnKeyType="send"
             ref={input => this.passwordVerifRef = input}
+            onSubmitEditing={registerHandler}
             onChangeText={verifyPasswordInputHandler}
             placeholder="Masukkan ulang kata sandi kamu"
             secureTextEntry

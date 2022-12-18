@@ -1,11 +1,12 @@
 import { collection, doc, getDoc, getDocs, onSnapshot } from "firebase/firestore"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Alert, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { auth, db } from "../config/firebase"
 import Icon from "@expo/vector-icons/Ionicons"
 
 import global from "../config/global"
 import { deleteData } from "../components/LocalStorage"
+import { useFocusEffect } from "@react-navigation/native"
 
 
 export default function ProfileScreen({navigation}) {
@@ -66,9 +67,11 @@ export default function ProfileScreen({navigation}) {
     navigation.navigate("Settings")
   }
 
-  useEffect(() => {
-    fetchUserData()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserData()
+    }, [])
+  )
 
   return (
     <ScrollView style={{ backgroundColor: "white", height: "100%" }}>

@@ -1,15 +1,14 @@
-import { updateDoc } from "firebase/firestore"
+import { doc, updateDoc } from "firebase/firestore"
 import { useState } from "react"
-import { Text, SafeAreaView, StatusBar, StyleSheet, View, Image, TextInput, Pressable, TouchableOpacity, ScrollView } from "react-native"
+import { Text, SafeAreaView, StatusBar, StyleSheet, View, Image, TextInput, Pressable, TouchableOpacity, ScrollView, Alert } from "react-native"
 import Icon from "react-native-vector-icons/Ionicons"
 import * as ImagePicker from "expo-image-picker"
 
 import { BackButton } from "../components/Buttons"
-import { db, storage } from "../config/firebase"
+import { auth, db, storage } from "../config/firebase"
 import global from "../config/global"
-import { ProfileScreenButton } from "./ProfileScreen"
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { uuidv4 } from "@firebase/util"
+import { ref, uploadBytes } from "firebase/storage"
+import { sendEmailVerification, updateEmail, updateProfile } from "firebase/auth"
 
 
 export default function EditProfileScreen({navigation, route}) {
@@ -30,70 +29,79 @@ export default function EditProfileScreen({navigation, route}) {
   const usernameInputHandler = (enteredEmail) => {
     setNewUsername(enteredEmail)
   }
-
-  const submitHandler = () => {
-    
-    // Update user data in Firestore
-    updateUserData()
-
-    // Update user auth
-  }
-
-  const updateUserData = async() => {
-    await updateDoc(doc(db, "users", user.uid), {
-      displayName: newDisplayName,
-      email: newEmail,
-      imageUrl: "",
-    })
-    .catch(error => console.log(error.code))
-  }
+  
 
   const pickImageHandler = async () => {
-    
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     })
-
+    
     console.log(result)
-
+    
     if (!result.canceled) {
       setNewImageUrl(result.assets[0].uri)
     }
   }
+  
 
-  // TODO: Evaluate
-  const uploadImageAsync = async(uri) => {
-    const blob = await new Promise((resolve, reject) => {
-      
-      const xhr = new XMLHttpRequest()
-      xhr.onload = function () {
-        resolve(xhr.response)
-      }
+  const uploadImageAsync = async() => {
+    
+    const response = await fetch(newImageUrl).catch(e => console.log(e))
+    const blob = await response.blob().catch(e => console.log(e))
+    const filename = newImageUrl.substring(newImageUrl.lastIndexOf("/") +1)
+    
+    let uploadDirRef = ref(storage, `ProfilePictures/${user.uid}/${filename}`)
+    uploadBytes(uploadDirRef, blob, {contentType: "image"})
+  }
+  
 
-      xhr.onerror = function (e) {
-        console.log(e)
-        reject(new TypeError("Network request failed"))
-      }
-
-      xhr.responseType = "blob"
-      xhr.open("GET", uri, true)
-      xhr.send(null)
+  const updateUserData = async() => {
+    await updateDoc(doc(db, "users", user.uid), {
+      displayName: newDisplayName,
+      email: newEmail,
+      imageUrl: newImageUrl? newImageUrl : user.imageUrl,
     })
-  
-    const fileRef = ref(storage, uri)
-    const result = await uploadBytes(fileRef, blob)
-    blob.close()
-  
-    return await getDownloadURL(fileRef)
+    .catch(error => console.log(error.code))
   }
 
-  // -- Main --
-  return (
-    <SafeAreaView style={styles.background}>
+
+  const updateUserAuth = async() => {
+    
+    // Updates display name and URL to user's profile picture
+    updateProfile(user, {
+      displayName: newDisplayName,
+      photoURL: newImageUrl
+    })
+
+    // Updates user's email used to login (only if it's changed)
+    if(user.email !== newEmail) {
+      updateEmail(user, newEmail).catch(e => console.log(e))
+      sendEmailVerification(user)
+    }
+  }
+  
+  const submitHandler = () => {
+    
+    // Update profile picture
+    uploadImageAsync()
+      
+    // Update user data in Firestore
+    updateUserData()
+    
+    // Update user auth
+    updateUserAuth()
+    
+    // Update done, user is brought back to previous screen
+    Alert.alert("Perubahan Tersimpan!", "Data profil kamu berhasil diubah!")
+    navigation.goBack()
+    }
+    
+    // -- Main --
+    return (
+      <SafeAreaView style={styles.background}>
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
         
         <BackButton navigation={navigation} />
@@ -141,38 +149,6 @@ export default function EditProfileScreen({navigation, route}) {
             style={styles.inputField}
           />
         </View>
-
-        { /* Password input */ }
-        {/* <Text style={styles.inputLabel}>Kata Sandi</Text>
-        <View style={styles.inputContainer}>
-          <Icon name="lock-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
-          <TextInput 
-            autoComplete="password"
-            textContentType="newPassword"
-            returnKeyType="next"
-            blurOnSubmit={false}
-            onChangeText={passwordInputHandler}
-            placeholder="Masukkan kata sandi kamu"
-            secureTextEntry
-            style={styles.inputField} 
-          />
-        </View> */}
-
-        { /* Verify password input */ }
-        {/* <Text style={styles.inputLabel}>Konfirmasi Kata Sandi</Text>
-        <View style={styles.inputContainer}>
-          <Icon name="lock-outline" size={styles.leftIcons.size} style={styles.leftIcons} />
-          <TextInput 
-            autoComplete="password"
-            textContentType="password"
-            returnKeyType="send"
-            onChangeText={verifyPasswordInputHandler}
-            placeholder="Masukkan ulang kata sandi kamu"
-            secureTextEntry
-            style={styles.inputField} 
-          />
-        </View> */}
-
 
         { /* Submit button */ }
         <TouchableOpacity activeOpacity={0.7} style={styles.submitButton} onPress={submitHandler}>

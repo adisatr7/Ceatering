@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { View, Text, StatusBar, StyleSheet, FlatList, ScrollView, TouchableOpacity, Image } from "react-native"
 import { collection, getDocs, query } from "firebase/firestore"
 import { LinearGradient } from "expo-linear-gradient"
@@ -6,15 +6,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import global from "../config/global"
 import Icon from "@expo/vector-icons/MaterialIcons"
 
-import { logout } from "../components/UserAuthentication"
 import VendorCard from "../components/VendorCard"
 import { CartButton } from "../components/Buttons"
 import { db } from "../config/firebase"
+import { useFocusEffect } from "@react-navigation/native"
 
 
 export default function HomeScreen({ navigation }) {
 
-  const [username, setUsername] = useState("(user)")
   const [hasScrolledDown, setHasScrolledDown] = useState(false)
 
   // Database related things
@@ -36,9 +35,11 @@ export default function HomeScreen({ navigation }) {
     setVendors(temp)
   }
 
-  useEffect(() => {
-    fetchVendorsData()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      fetchVendorsData()
+    }, [])
+  )
 
   return (
     <View>
