@@ -68,6 +68,8 @@ export default function EditProfileScreen({navigation, route}) {
     
     let uploadDirRef = ref(storage, `ProfilePictures/${user.uid}/${filename}`)
     uploadBytes(uploadDirRef, blob, {contentType: "image"})
+
+    setNewImageUrl(uploadDirRef.fullPath)
   }
 
   const updateUserData = async() => {
@@ -87,6 +89,8 @@ export default function EditProfileScreen({navigation, route}) {
       photoURL: newImageUrl
     })
 
+    reauthenticateWithCredential(auth.currentUser, credential)
+    
     // Updates user's email used to login (only if it's changed)
     if(user.email !== newEmail) {
       updateEmail(user, newEmail).catch(e => console.log(e))
@@ -94,7 +98,6 @@ export default function EditProfileScreen({navigation, route}) {
 
       const credential = EmailAuthProvider.credential(user.email, password)
 
-      reauthenticateWithCredential(auth.currentUser, credential)
     }
   }
   

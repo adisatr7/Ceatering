@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 
 import { BackButton } from "../components/Buttons"
 import { auth } from "../config/firebase"
+import LoadingModal from "../components/LoadingModal"
 import global from "../config/global"
 
 
@@ -53,7 +54,7 @@ export default function EditPasswordScreen({navigation, route}) {
       const user = auth.currentUser
       const credential = EmailAuthProvider.credential(user.email, oldPasswordInput)
 
-      reauthenticateWithCredential(user, credential)
+      reauthenticateWithCredential(user, credential).catch(error => console.log(error))
 
       // Attempts to update user's password
       updatePassword(auth.currentUser, newPasswordInput)
@@ -80,6 +81,10 @@ export default function EditPasswordScreen({navigation, route}) {
   // -- Main --
   return (
     <SafeAreaView style={styles.background}>
+
+      {/* Loading animation that plays when the submit button is clicked */}
+      <LoadingModal title="Menyimpan Perubahan" caption="Data profil baru kamu sedang disimpan" visible={isLoading} />
+
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
         
         <BackButton navigation={navigation} />

@@ -57,6 +57,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View>
+      
       <ScrollView style={styles.scrollContainer}>
         
         {/* Header */}
@@ -64,7 +65,7 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.headerText}>Beranda</Text>
 
           {/* Profile picture */}
-          <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate("EditProfile")} style={styles.profilePictureContainer}>
+          <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate("Profile")} style={styles.profilePictureContainer}>
             <Image source={{ uri: userData.imageUrl? userData.imageUrl : null }} style={styles.profilePicture}/>
           </TouchableOpacity>
         </View>

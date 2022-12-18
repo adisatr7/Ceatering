@@ -161,7 +161,7 @@ export default function ProfileScreen({navigation}) {
 
 
       {/* Margin bottom */}
-      <View style={{ height: 100}} />
+      <View style={{ height: 100 }} />
 
       <StatusBar animated translucent backgroundColor={global.color.statusBar} barStyle={"light-content"}/>
     </ScrollView>
@@ -178,7 +178,7 @@ export function ProfileScreenButton({icon, text, onPress}) {
         <Icon style={styles.chevron} name="chevron-forward" size={24} />
       </TouchableOpacity>
 
-      <StatusBar animated translucent backgroundColor={global.color.statusBar} barStyle={"light-content"}/>
+      <View style={{ height: 2, width: "100%", backgroundColor: global.color.primary, opacity: 0.3 }} />
     </View>
   )
 }

@@ -2,7 +2,7 @@ import { Nunito_400Regular, Nunito_500Medium, Nunito_600SemiBold, Nunito_700Bold
 
 
 export default {
-  debugMode: true,
+  debugMode: false,
   
   color: {
     primary: "#19B200",
