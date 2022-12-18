@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Alert, Text, SafeAreaView, StyleSheet, StatusBar, View, Image, TextInput, Pressable, TouchableOpacity, ScrollView } from "react-native"
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { useAuthRequest } from "expo-auth-session/providers/google"
-import Icon from "react-native-vector-icons/MaterialIcons"
+import Icon from "@expo/vector-icons/MaterialIcons"
 
 import { auth } from "../config/firebase"
 import global from "../config/global"
@@ -21,13 +21,12 @@ export default function LoginScreen({navigation}) {
   const [eyeIcon, setEyeIcon] = useState(require("../assets/eye_black.png"))
   
   const showPasswordButtonHandler = () => {
-    if(passwordVisibility) {
-      setPasswordVisibility(false)
+    setPasswordVisibility(!passwordVisibility)
+
+    if(passwordVisibility) 
       setEyeIcon(require("../assets/eye_black.png"))
-    } else {
-      setPasswordVisibility(true)
+    else 
       setEyeIcon(require("../assets/eye_colored.png"))
-    }
   }
 
   

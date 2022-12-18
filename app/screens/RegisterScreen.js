@@ -147,7 +147,7 @@ export default function RegisterScreen({navigation, route}) {
       {/* (DOES NOT WORK ON ANDROID) Animation that plays when user successfully created a nea account */}
       {/* <LoadingFinishedModal visible={animationIsPlaying} onFinish={onAnimationFinish}/> */}
 
-      <LoadingModal title="Tunggu sebentar" caption="Menghubungkan ke server..." visible={isLoading}/>
+      <LoadingModal title="Tunggu sebentar" caption="Mengirim data kamu ke server..." visible={isLoading}/>
       
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
         

@@ -12,7 +12,7 @@ import { useFocusEffect } from "@react-navigation/native"
 export default function ProfileScreen({navigation}) {
 
   // Variable hooks
-  const [user, setUser] = useState({})
+  const [userData, setUserData] = useState({})
 
   // Fetch user's profile picture from Firestore
   const fetchUserData = async() => {
@@ -24,9 +24,7 @@ export default function ProfileScreen({navigation}) {
       
       const temp = doc.data()
       temp["uid"] = doc.id
-      setUser(temp)
-      
-      console.log(user)
+      setUserData(temp)
     })
   }
 
@@ -48,11 +46,11 @@ export default function ProfileScreen({navigation}) {
   }
 
   const gotoEditProfile = () => {
-    navigation.navigate("EditProfile", { user: user })
+    navigation.navigate("EditProfile", { user: userData })
   }
 
   const gotoEditPassword = () => {
-    navigation.navigate("EditPassword", { user: user })
+    navigation.navigate("EditPassword", { user: userData })
   }
 
   const gotoSavedAddresses = () => {
@@ -86,17 +84,17 @@ export default function ProfileScreen({navigation}) {
         <View style={{ flexDirection: "row" }}>
 
           {/* Profile picture */}
-          <View style={styles.profilePictureContainer}>
-            <Image source={{ uri: user.imageUrl? user.imageUrl : null }} style={styles.profilePicture}/>
-          </View>
+          <TouchableOpacity activeOpacity={0.9} onPress={gotoEditProfile} style={styles.profilePictureContainer}>
+            <Image source={{ uri: userData.imageUrl? userData.imageUrl : null }} style={styles.profilePicture}/>
+          </TouchableOpacity>
 
           <View style={styles.profileInfoContainer}>
 
             {/* User display name */}
-            <Text style={styles.displayNameText}>{user.displayName}</Text>
+            <Text style={styles.displayNameText}>{userData.displayName}</Text>
 
             {/* User e-mail */}
-            <Text style={styles.emailText}>{user.email}</Text>
+            <Text style={styles.emailText}>{userData.email}</Text>
 
             {/* Level bar */}
             {/* -> Exp needed to level up = 100 x user level */}
@@ -106,7 +104,7 @@ export default function ProfileScreen({navigation}) {
                 borderTopLeftRadius: 3,
                 borderBottomLeftRadius: 3,
                 height: 10,
-                width: `${user.exp / user.level}%`,
+                width: `${userData.exp / userData.level}%`,
                 marginVertical: 10,
                 opacity: 0.85
               }}/>
@@ -115,7 +113,7 @@ export default function ProfileScreen({navigation}) {
                 borderTopRightRadius: 3,
                 borderBottomRightRadius: 3,
                 height: 10,
-                width: `${100 - (user.exp / user.level)}%`,
+                width: `${100 - (userData.exp / userData.level)}%`,
                 marginVertical: 10,
                 opacity: 0.5
               }}/>
@@ -125,10 +123,10 @@ export default function ProfileScreen({navigation}) {
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
 
               {/* User level */}
-              <Text style={styles.levelText}>Level {user.level}</Text>
+              <Text style={styles.levelText}>Level {userData.level}</Text>
 
               {/* User exp */}
-              <Text style={styles.expText}>Exp {user.exp}</Text>
+              <Text style={styles.expText}>Exp {userData.exp}</Text>
             
             </View>
           </View>

@@ -1,14 +1,16 @@
 import { doc, updateDoc } from "firebase/firestore"
 import { useState } from "react"
-import { Text, SafeAreaView, StatusBar, StyleSheet, View, Image, TextInput, Pressable, TouchableOpacity, ScrollView, Alert } from "react-native"
-import Icon from "react-native-vector-icons/Ionicons"
+import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native"
+import { EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, updateEmail, updateProfile } from "firebase/auth"
+import { ref, uploadBytes } from "firebase/storage"
+import Icon from "@expo/vector-icons/Ionicons"
 import * as ImagePicker from "expo-image-picker"
 
 import { BackButton } from "../components/Buttons"
 import { auth, db, storage } from "../config/firebase"
+import LoadingModal from "../components/LoadingModal"
 import global from "../config/global"
-import { ref, uploadBytes } from "firebase/storage"
-import { sendEmailVerification, updateEmail, updateProfile } from "firebase/auth"
+import PasswordPromptModal from "../components/PasswordPromptModal"
 
 
 export default function EditProfileScreen({navigation, route}) {
@@ -16,10 +18,18 @@ export default function EditProfileScreen({navigation, route}) {
   // Get user's current (old) email and display name
   const {user} = route.params
 
+  // Loading animation hook
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Prompt modal hook
+  const [showPrompt, setShowPrompt] = useState(false)
+  const [confirmEdit, setConfirmEdit] = useState(false)
+
   // Input hooks
   const [newEmail, setNewEmail] = useState(user.email)
   const [newDisplayName, setNewUsername] = useState(user.displayName)
   const [newImageUrl, setNewImageUrl] = useState("")
+  const [password, setPassword] = useState("")
 
   // Input handlers
   const emailInputHandler = (enteredEmail) => {
@@ -29,15 +39,19 @@ export default function EditProfileScreen({navigation, route}) {
   const usernameInputHandler = (enteredEmail) => {
     setNewUsername(enteredEmail)
   }
-  
 
-  const pickImageHandler = async () => {
+  const passwordInputHandler = (enteredPassword) => {
+    setPassword(enteredPassword)
+  }
+  
+  // Image picker
+  const pickImageHandler = async() => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-    })
+    }).catch(error => console.log(error))
     
     console.log(result)
     
@@ -46,7 +60,6 @@ export default function EditProfileScreen({navigation, route}) {
     }
   }
   
-
   const uploadImageAsync = async() => {
     
     const response = await fetch(newImageUrl).catch(e => console.log(e))
@@ -56,7 +69,6 @@ export default function EditProfileScreen({navigation, route}) {
     let uploadDirRef = ref(storage, `ProfilePictures/${user.uid}/${filename}`)
     uploadBytes(uploadDirRef, blob, {contentType: "image"})
   }
-  
 
   const updateUserData = async() => {
     await updateDoc(doc(db, "users", user.uid), {
@@ -66,7 +78,6 @@ export default function EditProfileScreen({navigation, route}) {
     })
     .catch(error => console.log(error.code))
   }
-
 
   const updateUserAuth = async() => {
     
@@ -80,10 +91,22 @@ export default function EditProfileScreen({navigation, route}) {
     if(user.email !== newEmail) {
       updateEmail(user, newEmail).catch(e => console.log(e))
       sendEmailVerification(user)
+
+      const credential = EmailAuthProvider.credential(user.email, password)
+
+      reauthenticateWithCredential(auth.currentUser, credential)
     }
   }
   
-  const submitHandler = () => {
+  const confirmChanges = () => {
+
+    console.log("Applying changes...")
+
+    // Closes modal
+    setShowPrompt(false)
+
+    // Plays animation
+    setIsLoading(true)
     
     // Update profile picture
     uploadImageAsync()
@@ -93,17 +116,26 @@ export default function EditProfileScreen({navigation, route}) {
     
     // Update user auth
     updateUserAuth()
-    
+
+    // Stops animation
+    setIsLoading(false)
+      
     // Update done, user is brought back to previous screen
     Alert.alert("Perubahan Tersimpan!", "Data profil kamu berhasil diubah!")
     navigation.goBack()
-    }
-    
-    // -- Main --
-    return (
-      <SafeAreaView style={styles.background}>
-      <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
-        
+  }
+  
+  // -- Main --
+  return (
+    <SafeAreaView style={styles.background}>
+
+      {/* Loading animation that plays when the submit button is clicked */}
+      <LoadingModal title="Menyimpan Perubahan" caption="Data profil baru kamu sedang disimpan" visible={isLoading} />
+
+      {/* Prompts user to reenter password when Submit button is clicked */}
+      <PasswordPromptModal visible={showPrompt} onSuccess={confirmChanges}/>
+
+      <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>  
         <BackButton navigation={navigation} />
 
         { /* Screen title text */ }
@@ -149,9 +181,10 @@ export default function EditProfileScreen({navigation, route}) {
             style={styles.inputField}
           />
         </View>
+        
 
         { /* Submit button */ }
-        <TouchableOpacity activeOpacity={0.7} style={styles.submitButton} onPress={submitHandler}>
+        <TouchableOpacity activeOpacity={0.7} style={styles.submitButton} onPress={() => setShowPrompt(true)}>
           <Text style={styles.submitButtonText}>Simpan Perubahan</Text>
         </TouchableOpacity>
 
@@ -194,7 +227,6 @@ const styles = StyleSheet.create({
   captionText: {
     fontFamily: global.font.regular,
     fontSize: global.fontSize.body,
-    marginTop: 8
   },
 
   profilePictureContainer: {
@@ -202,7 +234,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "silver",
     borderRadius: 65,
     
     borderWidth: global.debugMode ? 1 : 0,

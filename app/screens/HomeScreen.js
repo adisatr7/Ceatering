@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
 import { View, Text, StatusBar, StyleSheet, FlatList, ScrollView, TouchableOpacity, Image } from "react-native"
-import { collection, getDocs, query } from "firebase/firestore"
+import { collection, doc, getDocs, onSnapshot } from "firebase/firestore"
 import { LinearGradient } from "expo-linear-gradient"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import global from "../config/global"
-import Icon from "@expo/vector-icons/MaterialIcons"
 
 import VendorCard from "../components/VendorCard"
 import { CartButton } from "../components/Buttons"
-import { db } from "../config/firebase"
+import { auth, db } from "../config/firebase"
 import { useFocusEffect } from "@react-navigation/native"
 
 
@@ -18,8 +16,23 @@ export default function HomeScreen({ navigation }) {
 
   // Database related things
   const [vendors, setVendors] = useState([])
+  const [userData, setUserData] = useState({})
 
+  // Fetch user's profile picture from Firestore
+  const fetchUserData = async() => {
 
+    const uid = auth.currentUser.uid
+
+    // Run fetch query
+    const unsubListener = onSnapshot(doc(db, `users/${uid}`), doc => {
+      
+      const temp = doc.data()
+      temp["uid"] = doc.id
+      setUserData(temp)
+    })
+  }
+  
+  // Fetch all vendors data from Firestore
   const fetchVendorsData = async() => {
     const temp = []
     const querySnapshot = await getDocs(collection(db, "vendors"))
@@ -37,6 +50,7 @@ export default function HomeScreen({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      fetchUserData()
       fetchVendorsData()
     }, [])
   )
@@ -48,6 +62,11 @@ export default function HomeScreen({ navigation }) {
         {/* Header */}
         <View style={styles.greenBackground}>
           <Text style={styles.headerText}>Beranda</Text>
+
+          {/* Profile picture */}
+          <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate("EditProfile")} style={styles.profilePictureContainer}>
+            <Image source={{ uri: userData.imageUrl? userData.imageUrl : null }} style={styles.profilePicture}/>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.whiteBackground}>
@@ -107,6 +126,8 @@ const styles = StyleSheet.create({
   
   greenBackground: {
     backgroundColor: global.color.primary,
+    flexDirection: "row",
+    justifyContent: "space-between",
     height: StatusBar.currentHeight + 155,
     width: "100%"
   },
@@ -117,6 +138,30 @@ const styles = StyleSheet.create({
     fontSize: global.fontSize.headline2,
     marginLeft: 22,
     marginTop: StatusBar.currentHeight + 20
+  },
+
+  profilePictureContainer: {
+    backgroundColor: "white",
+    borderRadius: 55,
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+    width: 40,
+    marginRight: 22,
+    marginTop: StatusBar.currentHeight + 26,
+    
+    borderWidth: global.debugMode ? 1 : 0,
+    borderColor: "magenta"
+  },
+  
+  profilePicture: {
+    borderRadius: 55,
+    height: 40,
+    width: 40,
+    borderWidth: 2,
+    borderColor: "white",
+    resizeMode: "cover"
   },
 
   adContainer: {

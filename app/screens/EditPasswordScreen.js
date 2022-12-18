@@ -1,8 +1,10 @@
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth"
 import { useState } from "react"
-import { Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, ScrollView } from "react-native"
+import { Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons"
 
 import { BackButton } from "../components/Buttons"
+import { auth } from "../config/firebase"
 import global from "../config/global"
 
 
@@ -10,6 +12,9 @@ export default function EditPasswordScreen({navigation, route}) {
 
   // Get user's current (old) email and display name
   const {user} = route.params
+
+  // Loading animation hook
+  const [isLoading, setIsLoading] = useState(false)
 
   // Input hooks
   const [oldPasswordInput, setOldPasswordInput] = useState("")
@@ -22,7 +27,7 @@ export default function EditPasswordScreen({navigation, route}) {
     setOldPasswordInput(enteredText)
   }
 
-  const onewPasswordInputHandler = (enteredText) => {
+  const newPasswordInputHandler = (enteredText) => {
     setNewPasswordInput(enteredText)
   }
 
@@ -31,7 +36,44 @@ export default function EditPasswordScreen({navigation, route}) {
   }
 
   const submitHandler = () => {
-    // TODO: Implement!
+    
+    if(newPasswordInput !== newPasswordVerifInput) {
+      Alert.alert(
+        "Verifikasi Kata Sandi Baru Tidak Cocok", 
+        "Pastikan kamu memasukkan kedua kata sandi baru kamu dengan benar!",
+        [{ text: "Tutup" }])
+    }
+
+    else {
+
+      // Plays loading animation
+      setIsLoading(true)
+
+      // Reauthenticate user before making changes
+      const user = auth.currentUser
+      const credential = EmailAuthProvider.credential(user.email, oldPasswordInput)
+
+      reauthenticateWithCredential(user, credential)
+
+      // Attempts to update user's password
+      updatePassword(auth.currentUser, newPasswordInput)
+        .then(() => {
+          
+          // Stops loading animation
+          setIsLoading(false)
+
+          // Shows popup alert
+          Alert.alert("Berhasil!", "Kata sandi kamu berhasil diubah!", [{ text: "Tutup" }])
+          navigation.goBack()
+
+        })
+        .catch(error => {
+          console.log(error)
+
+          // Stops loading animation
+          setIsLoading(false)
+        })
+    }
   }
 
 
@@ -71,7 +113,7 @@ export default function EditPasswordScreen({navigation, route}) {
             returnKeyType="next"
             // ref={input => this.newPasswordRef = input}
             // onSubmitEditing={() => this.newPasswordVerifRef.focus()}
-            onChangeText={newPasswordVerifInputHandler}
+            onChangeText={newPasswordInputHandler}
             secureTextEntry
             style={styles.inputField} 
           />
