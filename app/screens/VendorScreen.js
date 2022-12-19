@@ -21,6 +21,7 @@ export default function VendorScreen({ navigation, route }) {
    * @param {*} vendorID 
    */
   const fetchVendorData = async(vendorID) => {
+    console.log("Fetching vendor data...")
     const querySnapshot = await getDoc(doc(db, "vendors", vendorID))
     .then(value => setVendor(value.data()))
     .catch(error => console.log(error.code))
@@ -33,6 +34,8 @@ export default function VendorScreen({ navigation, route }) {
    * @param {*} vendorID 
    */
   const fetchBundlesData = async(vendorID) => {
+    // Fetching bundles data
+    
     const q = query(collection(db, "bundles"), where("vendorID", "==", vendorID))
     const querySnapshot = await getDocs(q)
     .catch(error => {
@@ -48,23 +51,24 @@ export default function VendorScreen({ navigation, route }) {
     setBundlesArray(temp)
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      const temp = []
+  useEffect(() => {
+    const temp = []
 
-      fetchVendorData(vendorID)
-      temp.push(vendor)
+    fetchVendorData(vendorID)
+    temp.push(vendor)
 
-      fetchBundlesData(vendorID)
-      for(let bundle of bundlesArray) {
-        temp.push(bundle)
-      }
+    // TODO: Fetch saved custom orders
 
-      setItemList(temp)
-      console.log(itemList)
-    }, [])
-  )
+    fetchBundlesData(vendorID)
+    for(let bundle of bundlesArray) {
+      temp.push(bundle)
+    }
+
+    setItemList(temp)
+    console.log(itemList)
+  }, [])
   
+
   return (
     <View style={styles.mainContainer}>
 
@@ -91,12 +95,9 @@ export default function VendorScreen({ navigation, route }) {
               </View>
             )
           }
-
         }}
       />
       
-      
-
       
     </View>
   )
@@ -132,7 +133,11 @@ const styles = StyleSheet.create({
   },
 
   vendorInfoContainer: {
-    width: "90%"
+    width: "90%",
+    height: 500,
+
+    borderWidth: global.debugMode ? 1 : 0,
+    borderColor: "magenta"
   },
 
   vendorNameText: {

@@ -2,7 +2,7 @@ import { doc, updateDoc } from "firebase/firestore"
 import { useState } from "react"
 import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, updateEmail, updateProfile } from "firebase/auth"
-import { ref, uploadBytes } from "firebase/storage"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import Icon from "@expo/vector-icons/Ionicons"
 import * as ImagePicker from "expo-image-picker"
 
@@ -67,7 +67,7 @@ export default function EditProfileScreen({navigation, route}) {
     const filename = newImageUrl.substring(newImageUrl.lastIndexOf("/") +1)
     
     let uploadDirRef = ref(storage, `ProfilePictures/${user.uid}/${filename}`)
-    uploadBytes(uploadDirRef, blob, {contentType: "image"})
+    await uploadBytes(uploadDirRef, blob, {contentType: "image"})
 
     setNewImageUrl(uploadDirRef.fullPath)
   }

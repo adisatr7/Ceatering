@@ -84,7 +84,7 @@ export default function ProfileScreen({navigation}) {
         <View style={{ flexDirection: "row" }}>
 
           {/* Profile picture */}
-          <TouchableOpacity activeOpacity={0.9} onPress={gotoEditProfile} style={styles.profilePictureContainer}>
+          <TouchableOpacity activeOpacity={0.8} onPress={gotoEditProfile} style={styles.profilePictureContainer}>
             <Image source={{ uri: userData.imageUrl? userData.imageUrl : null }} style={styles.profilePicture}/>
           </TouchableOpacity>
 
