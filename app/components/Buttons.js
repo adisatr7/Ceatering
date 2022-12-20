@@ -1,4 +1,4 @@
-import { TouchableOpacity, StatusBar, StyleSheet } from "react-native"
+import { TouchableOpacity, StatusBar, StyleSheet, View } from "react-native"
 import { Ionicons } from "@expo/vector-icons/"
 import global from "../config/global"
 
@@ -10,11 +10,14 @@ export function BackButton({navigation}) {
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.9} style={styles.backButton} onPress={backButtonHandler} >
-      <Ionicons name="arrow-back" size={18} style={styles.backIcon}/>
+    <TouchableOpacity activeOpacity={0.8} onPress={backButtonHandler} >
+      <View style={styles.backButton}>
+        <Ionicons name="arrow-back" size={18} style={styles.backIcon}/>
+      </View>
     </TouchableOpacity>
   )
 }
+
 
 export function CartButton({navigation}) {
 
@@ -32,6 +35,7 @@ export function CartButton({navigation}) {
 
 const styles = StyleSheet.create({
   backButton: {
+    backgroundColor: "white",
     marginTop: StatusBar.currentHeight + 20,
     marginBottom: 15,
     marginRight: 12,

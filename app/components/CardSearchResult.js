@@ -3,20 +3,21 @@ import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image } from "rea
 import global from "../config/global"
 
 
-export default function BundleCard({item, navigation}) {
+export default function CardSearchResult({item, navigation}) {
 
   const pressHandler = () => {
     navigation.navigate("Vendor", {vendorID: item.vendorID})
   }
 
-  const formattedPrice = item.price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "1.")
+  const formattedPrice = item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
   return (
     <TouchableOpacity onPress={pressHandler} activeOpacity={0.7} style={styles.mainContainer} >
       <Image source={{uri: item.imageUrl}} style={styles.image}/>
       <View style={styles.textContainer}>
-        <Text numberOfLines={2} style={styles.nameText}>{item.name}</Text>
+        <Text numberOfLines={1} style={styles.nameText}>{item.name}</Text>
         <Text numberOfLines={1} style={styles.priceText}>Rp{formattedPrice}</Text>
+        <Text numberOfLines={1} style={styles.vendorNameText}>{item.vendorName}</Text>
       </View>
     </TouchableOpacity>
   )

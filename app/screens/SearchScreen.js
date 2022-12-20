@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { FlatList, StatusBar, StyleSheet, Text, View } from "react-native"
-import { collection, doc, getDoc, getDocs, limit, query, where } from "firebase/firestore"
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore"
+import { useFocusEffect } from "@react-navigation/native"
 
 import { db } from "../config/firebase"
 import global from "../config/global"
 import SearchBar from "../components/SearchBar"
-import SearchResultCard from "../components/SearchResultCard"
+import CardSearchResult from "../components/CardSearchResult"
 import VendorScreen from "./VendorScreen"
-import { useFocusEffect } from "@react-navigation/native"
 
 
 export default function SearchScreen({navigation}) {
@@ -26,7 +26,7 @@ export default function SearchScreen({navigation}) {
 
     // If keyword is empty, show all items
     if(keyword.length === 0)
-      q = query(collection(db, "bundles"))
+      q = query(collection(db, "bundles"), orderBy("price"))
 
     // If keyword is filled, filter items based on given keyword
     else
@@ -123,7 +123,7 @@ export default function SearchScreen({navigation}) {
             else if(item.isLastItem)
               return <Text style={styles.endOfResultText}>Akhir dari hasil pencarian.</Text>
 
-            return <SearchResultCard onPress={gotoVendorScreen} item={item} navigation={navigation}/>
+            return <CardSearchResult onPress={gotoVendorScreen} item={item} navigation={navigation}/>
           }}
         />
       </View>

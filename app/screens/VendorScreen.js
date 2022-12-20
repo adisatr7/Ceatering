@@ -1,16 +1,21 @@
+import { useCallback, useState } from "react"
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { useFocusEffect } from "@react-navigation/native"
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore"
-import { useCallback, useEffect, useState } from "react"
-import { FlatList, Image, StyleSheet, Text, View } from "react-native"
+import Icon from "@expo/vector-icons/Ionicons"
+
+import { BackButton } from "../components/Buttons"
 import { db } from "../config/firebase"
 import global from "../config/global"
+import CardItem from "../components/CardItem"
 
 
 export default function VendorScreen({ navigation, route }) {
   
   const [vendor, setVendor] = useState({})
-  const [bundlesArray, setBundlesArray] = useState([])
-  const [itemList, setItemList] = useState([])
+  const [bundles, setBundles] = useState([])
+  const [compositions, setCompositions] = useState([])
+  const [savedCustomItems, setSavedCustomItems] = useState([])
 
   const { vendorID } = route.params
 
@@ -21,9 +26,8 @@ export default function VendorScreen({ navigation, route }) {
    * @param {*} vendorID 
    */
   const fetchVendorData = async(vendorID) => {
-    console.log("Fetching vendor data...")
     const querySnapshot = await getDoc(doc(db, "vendors", vendorID))
-    .then(value => setVendor(value.data()))
+    .then(doc => setVendor(doc.data()))
     .catch(error => console.log(error.code))
   }
 
@@ -34,8 +38,6 @@ export default function VendorScreen({ navigation, route }) {
    * @param {*} vendorID 
    */
   const fetchBundlesData = async(vendorID) => {
-    // Fetching bundles data
-    
     const q = query(collection(db, "bundles"), where("vendorID", "==", vendorID))
     const querySnapshot = await getDocs(q)
     .catch(error => {
@@ -45,60 +47,80 @@ export default function VendorScreen({ navigation, route }) {
 
     const temp = []
     querySnapshot.forEach(result => {
-      temp.push(result.data())
+      let data = result.data()
+      data["id"] = result.id
+      temp.push(data)
     })
 
-    setBundlesArray(temp)
+    setBundles(temp)
   }
 
-  useEffect(() => {
-    const temp = []
-
-    fetchVendorData(vendorID)
-    temp.push(vendor)
-
-    // TODO: Fetch saved custom orders
-
-    fetchBundlesData(vendorID)
-    for(let bundle of bundlesArray) {
-      temp.push(bundle)
-    }
-
-    setItemList(temp)
-    console.log(itemList)
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      fetchVendorData(vendorID)
+      // TODO: Fetch custom item ingredients
+      // TODO: Fetch saved custom items
+      fetchBundlesData(vendorID)
   
+    }, [])
+  )
+
+  // Renders (or not) stuff that are only shown if vendor accepts custom item order
+  const renderNewCustomItemButton = () => {
+    if(vendor.acceptsCustomItem) {
+      return (
+        <View style={{ width: "88%", marginTop: 3 }}>
+          <Text style={styles.categoryHeaderText}>Ingin coba hal baru?</Text>
+          <TouchableOpacity activeOpacity={0.5} >
+            <View style={styles.newCustomItemButton}>
+              <Icon name="restaurant-outline" size={styles.newCustomItemIcon.size} style={styles.newCustomItemIcon}/>
+              <Text style={styles.newCustomItemText}>Buat paket sendiri</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+  }
 
   return (
-    <View style={styles.mainContainer}>
+    <View>
 
-      <FlatList
-        data={itemList}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}
-        renderItem={({item}) => {
-
-          // If current item is a vendor object
-          if(item.address) {
-            return (
-              <View style={styles.thumbnailContainer}>
-                {/* Thumbnail */}
-                <Image source={{ uri: item.imageUrl }} style={styles.vendorImage} />
-
-                {/* Vendor Info */}
-                <View style={styles.vendorInfoContainer}>
-                  <Text style={styles.vendorNameText}>{item.name}</Text>
-                  <Text style={styles.vendorAddressText}>{item.address}</Text>
-                </View>
-
-                <View style={{ backgroundColor: "black", height: 1, width: "93%", marginTop: 12 }}/>
-              </View>
-            )
-          }
-        }}
-      />
+      {/* Back button */}
+      <View style={styles.backbutton}>
+        <BackButton navigation={navigation}/>
+      </View>
       
+      <ScrollView contentContainerStyle={styles.mainContainer}>
+
+        {/* Thumbnail */}
+        <View style={styles.thumbnailContainer}>
+          <Image source={{ uri: vendor.imageUrl }} style={styles.vendorImage} />
+        </View>
+
+        {/* Vendor Info */}
+        <View style={styles.vendorInfoContainer}>
+          <Text style={styles.vendorNameText}>{vendor.name}</Text>
+          <Text style={styles.vendorAddressText}>{vendor.address}</Text>
+        </View>
+
+        {/* Divider */}
+        <View style={{ backgroundColor: "black", height: 1, width: "90%", marginTop: 12 }}/>
       
+        {/* "Create custom item" button will appear if the vendor accepts such request */}
+        { renderNewCustomItemButton() }
+
+        {/* If user has created a custom item before, they will be listed here */}
+
+        {/* Bundles */}
+        <View style={styles.itemContainer}>
+          <Text style={styles.categoryHeaderText}>Menu Paket</Text>
+          { bundles.map(item => <CardItem key={item.id} item={item} navigation={navigation} /> ) }
+        </View>
+
+        {/* End of the line text */}
+        <Text style={styles.endOfResultText}>Akhir dari daftar menu makanan.</Text>
+
+      </ScrollView>
     </View>
   )
 }
@@ -107,6 +129,16 @@ export default function VendorScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: "white",
+    alignItems: "center",
+
+    borderWidth: global.debugMode ? 1 : 0,
+    borderColor: "magenta"
+  },
+
+  backbutton: {
+    position: "absolute",
+    left: 20,
+    zIndex: 3,
 
     borderWidth: global.debugMode ? 1 : 0,
     borderColor: "magenta"
@@ -133,8 +165,7 @@ const styles = StyleSheet.create({
   },
 
   vendorInfoContainer: {
-    width: "90%",
-    height: 500,
+    width: "88%",
 
     borderWidth: global.debugMode ? 1 : 0,
     borderColor: "magenta"
@@ -153,5 +184,49 @@ const styles = StyleSheet.create({
     marginTop: 3
   },
 
+  newCustomItemButton: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    borderWidth: 1,
+    elevation: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
 
+    borderColor: global.debugMode? "magenta" : "black"
+  },
+
+  newCustomItemIcon: {
+    size: 20,
+    marginRight: 6
+  },
+
+  newCustomItemText: {
+    fontFamily: global.font.bold,
+    fontSize: global.fontSize.body
+  },
+
+  itemContainer: {
+    marginTop: 10,
+    width: "90%",
+
+    borderWidth: global.debugMode ? 1 : 0,
+    borderColor: "magenta"
+  },
+
+  categoryHeaderText: {
+    fontFamily: global.font.regular,
+    fontSize: global.fontSize.headline3,
+    marginVertical: 7
+  },
+
+  endOfResultText: {
+    alignSelf: "center",
+    color: "grey",
+    fontFamily: global.font.regular,
+    fontSize: global.fontSize.caption,
+    marginTop: 5,
+    marginBottom: 50
+  }
 })

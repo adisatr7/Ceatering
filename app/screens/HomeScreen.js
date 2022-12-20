@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { View, Text, StatusBar, StyleSheet, FlatList, ScrollView, TouchableOpacity, Image } from "react-native"
 import { collection, doc, getDocs, onSnapshot } from "firebase/firestore"
 import { LinearGradient } from "expo-linear-gradient"
 import global from "../config/global"
 
-import VendorCard from "../components/VendorCard"
+import CardVendor from "../components/CardVendor"
 import { CartButton } from "../components/Buttons"
 import { auth, db } from "../config/firebase"
 import { useFocusEffect } from "@react-navigation/native"
@@ -85,7 +85,7 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.sectionListContainer}>
               <FlatList
                 data={vendors}
-                renderItem={({item}) => <VendorCard vendor={item} onPress={() => navigation.navigate("Vendor", { vendorID: item.vendorID } )} />}
+                renderItem={({item}) => <CardVendor vendor={item} onPress={() => navigation.navigate("Vendor", { vendorID: item.vendorID } )} />}
                 keyExtractor={(item) => item.vendorID}
                 horizontal
                 showsHorizontalScrollIndicator={false}

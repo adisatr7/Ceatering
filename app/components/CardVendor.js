@@ -3,7 +3,7 @@ import { ImageBackground, View, Text, StyleSheet, StatusBar, Dimensions, Touchab
 import global from "../config/global"
 
 
-export default function VendorCard({ vendor, onPress }) {
+export default function CardVendor({ vendor, onPress }) {
 
   return (
     <TouchableOpacity activeOpacity={0.7} style={styles.mainContainer} onPress={onPress} >
