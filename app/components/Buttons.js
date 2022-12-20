@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 40,
     width: 40,
-    elevation: 2,
+    elevation: 3,
     shadowColor: global.shadowColor,
     shadowOpacity: global.shadowOpacity,
 
