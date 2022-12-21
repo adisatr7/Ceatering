@@ -20,7 +20,8 @@ import EditPasswordScreen from "./app/screens/EditPasswordScreen"
 import SettingsScreen from "./app/screens/SettingsScreen"
 import HelpCenterScreen from "./app/screens/HelpCenterScreen"
 import SavedAddressesScreen from "./app/screens/SavedAddressesScreen"
-import NewCustomItemScreen from "./app/screens/NewCustomItemScreen"
+import CustomItemCreatorScreen from "./app/screens/CustomItemCreatorScreen"
+import AddCompositionScreen from "./app/screens/AddCompositionScreen"
 
 const Stack = createStackNavigator()
 
@@ -49,7 +50,8 @@ export default function App() {
             <Stack.Screen name="Register" component={RegisterScreen}/>
             <Stack.Screen name="Main" component={BottomTabNav}/>
             <Stack.Screen name="Vendor" component={VendorScreen}/>
-            <Stack.Screen name="NewCustomItem" component={NewCustomItemScreen}/>
+            <Stack.Screen name="CustomItemCreator" component={CustomItemCreatorScreen}/>
+            <Stack.Screen name="AddComposition" component={AddCompositionScreen}/>
             <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
             <Stack.Screen name="EditPassword" component={EditPasswordScreen}/>
             <Stack.Screen name="Addresses" component={SavedAddressesScreen}/>

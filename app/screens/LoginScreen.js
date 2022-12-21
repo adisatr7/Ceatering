@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Alert, Text, SafeAreaView, StyleSheet, StatusBar, View, Image, TextInput, Pressable, TouchableOpacity, ScrollView } from "react-native"
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { useAuthRequest } from "expo-auth-session/providers/google"
@@ -7,7 +7,7 @@ import Icon from "@expo/vector-icons/MaterialIcons"
 import { auth } from "../config/firebase"
 import global from "../config/global"
 import strings from "../config/strings"
-import LoadingModal from "../components/LoadingModal"
+import ModalLoading from "../components/ModalLoading"
 
 
 
@@ -141,7 +141,7 @@ export default function LoginScreen({navigation}) {
     <SafeAreaView style={styles.background}>
 
       {/* Loading animation */}
-      <LoadingModal title="Tunggu sebentar" caption="Menghubungkan ke server..." visible={isLoading}/>
+      <ModalLoading title="Tunggu sebentar" caption="Menghubungkan ke server..." visible={isLoading}/>
 
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
         <Image style={global.styles.brandlogo} source={require("../assets/brandlogo_colored.png")} />

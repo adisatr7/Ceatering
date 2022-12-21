@@ -4,7 +4,7 @@ import { Flow } from "react-native-animated-spinkit"
 import global from "../config/global"
 
 
-export default function LoadingModal({visible, title, caption}) {
+export default function ModalLoading({visible, title, caption}) {
 
   return (
     <Modal animationType="fade" transparent visible={visible}>

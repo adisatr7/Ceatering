@@ -6,7 +6,7 @@ import { auth } from "../config/firebase"
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth"
 
 
-export default function PasswordPromptModal({visible, onSuccess, onCancel}) {
+export default function ModalPasswordPrompt({visible, onSuccess, onCancel}) {
 
   // Toggle password visibility handler
   const [passwordVisibility, setPasswordVisibility] = useState(false)
@@ -90,19 +90,19 @@ export default function PasswordPromptModal({visible, onSuccess, onCancel}) {
 
           </View>
 
-        {/* Error message if user tries to submit an empty password */}
+        {/* Error messages */}
         <Text style={styles.redCaption}>{warningText}</Text>
         
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
 
           { /* Cancel button */ }
           <TouchableOpacity activeOpacity={0.7} style={styles.cancelButton} onPress={onCancel}>
-            <Text style={styles.submitButtonText}>Batalkan</Text>
+            <Text style={styles.buttonText}>Batalkan</Text>
           </TouchableOpacity>
 
           { /* Submit button */ }
           <TouchableOpacity activeOpacity={0.7} style={styles.submitButton} onPress={submitHandler}>
-            <Text style={styles.submitButtonText}>Simpan</Text>
+            <Text style={styles.buttonText}>Simpan</Text>
           </TouchableOpacity>
 
         </View>
@@ -183,12 +183,6 @@ const styles = StyleSheet.create({
     width: 20
   },
 
-  cancelButtonText: {
-    color: "white",
-    fontFamily: global.font.bold,
-    fontSize: global.fontSize.body
-  },
-
   cancelButton: {
     backgroundColor: "silver",
     borderRadius: 10,
@@ -215,7 +209,7 @@ const styles = StyleSheet.create({
     elevation: 2
   },
 
-  submitButtonText: {
+  buttonText: {
     color: "white",
     fontFamily: global.font.bold,
     fontSize: global.fontSize.body

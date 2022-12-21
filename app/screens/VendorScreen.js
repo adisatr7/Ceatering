@@ -69,9 +69,9 @@ export default function VendorScreen({ navigation, route }) {
   const renderNewCustomItemButton = () => {
     if(vendor.acceptsCustomItem) {
       return (
-        <View style={{ width: "88%", marginTop: 3 }}>
+        <View style={{ width: "90%", marginTop: 3 }}>
           <Text style={styles.categoryHeaderText}>Ingin coba hal baru?</Text>
-          <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("NewCustomItem", { vendorID: vendorID })}>
+          <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("CustomItemCreator", { vendorID: vendorID })}>
             <View style={styles.newCustomItemButton}>
               <Icon name="restaurant-outline" size={styles.newCustomItemIcon.size} style={styles.newCustomItemIcon}/>
               <Text style={styles.newCustomItemText}>Buat paket sendiri</Text>
@@ -118,7 +118,7 @@ export default function VendorScreen({ navigation, route }) {
         </View>
 
         {/* End of the line text */}
-        <Text style={styles.endOfResultText}>Akhir dari daftar menu makanan.</Text>
+        {/* <Text style={styles.endOfResultText}>Akhir dari daftar menu makanan.</Text> */}
 
       </ScrollView>
     </View>

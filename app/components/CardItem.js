@@ -3,16 +3,12 @@ import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image } from "rea
 import global from "../config/global"
 
 
-export default function CardItem({item, navigation}) {
-
-  const pressHandler = () => {
-    // navigation.navigate("Vendor", {vendorID: item.vendorID})
-  }
+export default function CardItem({item, navigation, onPress}) {
 
   const formattedPrice = item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
   return (
-    <TouchableOpacity onPress={pressHandler} activeOpacity={0.7} style={styles.mainContainer} >
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={styles.mainContainer} >
       <Image source={{uri: item.imageUrl}} style={styles.image}/>
       <View style={styles.textContainer}>
         <Text numberOfLines={1} style={styles.text}>{item.name}</Text>

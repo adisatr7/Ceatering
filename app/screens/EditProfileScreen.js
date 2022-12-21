@@ -1,16 +1,16 @@
 import { doc, updateDoc } from "firebase/firestore"
 import { useState } from "react"
-import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native"
+import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, ScrollView, Alert, StatusBar } from "react-native"
 import { EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, updateEmail, updateProfile } from "firebase/auth"
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { ref, uploadBytes } from "firebase/storage"
 import Icon from "@expo/vector-icons/Ionicons"
 import * as ImagePicker from "expo-image-picker"
 
 import { BackButton } from "../components/Buttons"
 import { auth, db, storage } from "../config/firebase"
-import LoadingModal from "../components/LoadingModal"
+import ModalLoading from "../components/ModalLoading"
 import global from "../config/global"
-import PasswordPromptModal from "../components/PasswordPromptModal"
+import ModalPasswordPrompt from "../components/ModalPasswordPrompt"
 
 
 export default function EditProfileScreen({navigation, route}) {
@@ -133,16 +133,18 @@ export default function EditProfileScreen({navigation, route}) {
     <SafeAreaView style={styles.background}>
 
       {/* Loading animation that plays when the submit button is clicked */}
-      <LoadingModal title="Menyimpan Perubahan" caption="Data profil baru kamu sedang disimpan" visible={isLoading} />
+      <ModalLoading title="Menyimpan Perubahan" caption="Data profil baru kamu sedang disimpan" visible={isLoading} />
 
       {/* Prompts user to reenter password when Submit button is clicked */}
-      <PasswordPromptModal visible={showPrompt} onSuccess={confirmChanges} onCancel={() => setShowPrompt(false)} />
+      <ModalPasswordPrompt visible={showPrompt} onSuccess={confirmChanges} onCancel={() => setShowPrompt(false)} />
 
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>  
-        <BackButton navigation={navigation} />
 
-        { /* Screen title text */ }
-        <Text style={styles.headerText}>Ubah Profil</Text>
+        { /* Screen header */ }
+        <View style={{ flexDirection: "row", alignItems: "center" }} >
+          <BackButton navigation={navigation} />
+          <Text style={styles.headerText}>Ubah Profil</Text>
+        </View>
 
         {/* Profile picture */}
         <View style={styles.profilePictureContainer}>
@@ -224,7 +226,8 @@ const styles = StyleSheet.create({
     color: global.color.primary,
     fontFamily: global.font.bold,
     fontSize: global.fontSize.headline3,
-    marginBottom: 20
+    marginBottom: 15,
+    marginTop: StatusBar.currentHeight + 20
   },
 
   captionText: {
@@ -239,6 +242,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "silver",
     borderRadius: 65,
+    marginTop: 20,
     
     borderWidth: global.debugMode ? 1 : 0,
     borderColor: "magenta"
@@ -280,7 +284,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: "row",
     alignItems: "center",
-    height: 50,
+    height: 45,
     width: "100%",
     marginTop: 10,
     paddingHorizontal: 10
@@ -305,7 +309,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    height: 50,
+    height: 45,
     width: "100%",
     marginTop: 35,
     paddingHorizontal: 15,

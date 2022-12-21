@@ -5,8 +5,7 @@ import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacit
 import Icon from "react-native-vector-icons/MaterialIcons"
 
 import { BackButton } from "../components/Buttons"
-import LoadingModal from "../components/LoadingModal"
-import LoadingFinishedModal from "../components/LoadingModal"
+import ModalLoading from "../components/ModalLoading"
 import { auth, db } from "../config/firebase"
 import global from "../config/global"
 import strings from "../config/strings"
@@ -147,7 +146,7 @@ export default function RegisterScreen({navigation, route}) {
       {/* (DOES NOT WORK ON ANDROID) Animation that plays when user successfully created a nea account */}
       {/* <LoadingFinishedModal visible={animationIsPlaying} onFinish={onAnimationFinish}/> */}
 
-      <LoadingModal title="Tunggu sebentar" caption="Mengirim data kamu ke server..." visible={isLoading}/>
+      <ModalLoading title="Tunggu sebentar" caption="Mengirim data kamu ke server..." visible={isLoading}/>
       
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
         

@@ -84,7 +84,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.sectionNameText}>Rekomendasi</Text>
             <View style={styles.sectionListContainer}>
               <FlatList
-                data={vendors}
+                data={vendors.slice().sort(() => Math.random() - 0.5)}
                 renderItem={({item}) => <CardVendor vendor={item} onPress={() => navigation.navigate("Vendor", { vendorID: item.vendorID } )} />}
                 keyExtractor={(item) => item.vendorID}
                 horizontal
@@ -92,6 +92,24 @@ export default function HomeScreen({ navigation }) {
               />
             </View>
           </View>
+
+          {/* Populer */}
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionNameText}>Populer</Text>
+            <View style={styles.sectionListContainer}>
+              <FlatList
+                data={vendors.slice().sort(() => Math.random() - 0.5)}
+                renderItem={({item}) => <CardVendor vendor={item} onPress={() => navigation.navigate("Vendor", { vendorID: item.vendorID } )} />}
+                keyExtractor={(item) => item.vendorID}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          </View>
+
+          {/* Void (bottom margin) */}
+          <View style={{ height: 50 }}/>
+
         </View>
       </ScrollView>
       

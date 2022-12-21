@@ -1,12 +1,12 @@
-import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth"
 import { useState } from "react"
-import { Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native"
-import Icon from "react-native-vector-icons/MaterialIcons"
+import { Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, ScrollView, Alert, StatusBar } from "react-native"
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth"
 
 import { BackButton } from "../components/Buttons"
 import { auth } from "../config/firebase"
-import LoadingModal from "../components/LoadingModal"
+import ModalLoading from "../components/ModalLoading"
 import global from "../config/global"
+import strings from "../config/strings"
 
 
 export default function EditPasswordScreen({navigation, route}) {
@@ -37,8 +37,15 @@ export default function EditPasswordScreen({navigation, route}) {
   }
 
   const submitHandler = () => {
+
+    if(!oldPasswordInput || !newPasswordInput || !newPasswordVerifInput) {
+      Alert.alert(
+        "Ets, Tunggu Dulu", 
+        "Pastikan kamu mengisi semua kolom yang ada!",
+        [{ text: "Tutup" }])
+    }
     
-    if(newPasswordInput !== newPasswordVerifInput) {
+    else if(newPasswordInput !== newPasswordVerifInput) {
       Alert.alert(
         "Verifikasi Kata Sandi Baru Tidak Cocok", 
         "Pastikan kamu memasukkan kedua kata sandi baru kamu dengan benar!",
@@ -54,25 +61,35 @@ export default function EditPasswordScreen({navigation, route}) {
       const user = auth.currentUser
       const credential = EmailAuthProvider.credential(user.email, oldPasswordInput)
 
-      reauthenticateWithCredential(user, credential).catch(error => console.log(error))
-
-      // Attempts to update user's password
-      updatePassword(auth.currentUser, newPasswordInput)
+      reauthenticateWithCredential(user, credential)
+        .catch(error => console.log(error))
         .then(() => {
-          
-          // Stops loading animation
-          setIsLoading(false)
+    
+          // Attempts to update user's password
+          updatePassword(auth.currentUser, newPasswordInput)
+            .then(() => {
+              
+              // Stops loading animation
+              setIsLoading(false)
+    
+              // Shows popup alert
+              Alert.alert("Berhasil!", "Kata sandi kamu berhasil diubah!", [{ text: "Tutup" }])
+              navigation.goBack()
+            })
+            .catch(error => {
+              console.log(error)
+    
+              // Stops loading animation
+              setIsLoading(false)
 
-          // Shows popup alert
-          Alert.alert("Berhasil!", "Kata sandi kamu berhasil diubah!", [{ text: "Tutup" }])
-          navigation.goBack()
-
-        })
-        .catch(error => {
-          console.log(error)
-
-          // Stops loading animation
-          setIsLoading(false)
+              // Password < 6 digit
+              if(error.code === "auth/weak-password")
+                Alert.alert(strings.alert.weakPassword.title, strings.alert.weakPassword.desc)
+              
+              // Bad network
+              if(error.code === "auth/network-request-failed")
+                Alert.alert(strings.alert.networkError.title, strings.alert.networkError.desc)
+            })
         })
     }
   }
@@ -83,14 +100,15 @@ export default function EditPasswordScreen({navigation, route}) {
     <SafeAreaView style={styles.background}>
 
       {/* Loading animation that plays when the submit button is clicked */}
-      <LoadingModal title="Menyimpan Perubahan" caption="Data profil baru kamu sedang disimpan" visible={isLoading} />
+      <ModalLoading title="Menyimpan Perubahan" caption="Data profil baru kamu sedang disimpan" visible={isLoading} />
 
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} >
         
-        <BackButton navigation={navigation} />
-
-        { /* Screen title text */ }
-        <Text style={styles.headerText}>Ubah Kata Sandi</Text>
+        { /* Screen Header */ }
+        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 30 }} >
+          <BackButton navigation={navigation} />
+          <Text style={styles.headerText}>Ubah Kata Sandi</Text>
+        </View>
 
         { /* Old password input */ }
         <Text style={styles.inputLabel}>Kata Sandi Lama</Text>
@@ -179,7 +197,8 @@ const styles = StyleSheet.create({
     color: global.color.primary,
     fontFamily: global.font.bold,
     fontSize: global.fontSize.headline3,
-    marginBottom: 20
+    marginBottom: 15,
+    marginTop: StatusBar.currentHeight + 20
   },
 
   captionText: {
@@ -236,7 +255,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: "row",
     alignItems: "center",
-    height: 50,
+    height: 45,
     width: "100%",
     marginTop: 10,
     paddingHorizontal: 10
@@ -255,9 +274,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    height: 50,
+    height: 45,
     width: "100%",
-    marginTop: 35,
+    marginTop: 50,
     paddingHorizontal: 15,
     elevation: 2
   },

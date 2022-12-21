@@ -1,4 +1,4 @@
-import { TouchableOpacity, StatusBar, StyleSheet, View } from "react-native"
+import { TouchableOpacity, StatusBar, StyleSheet, View, Alert } from "react-native"
 import { Ionicons } from "@expo/vector-icons/"
 import global from "../config/global"
 
@@ -7,6 +7,25 @@ export function BackButton({navigation}) {
 
   const backButtonHandler = () => {
     navigation.goBack()
+  }
+
+  return (
+    <TouchableOpacity activeOpacity={0.8} onPress={backButtonHandler} >
+      <View style={styles.backButton}>
+        <Ionicons name="arrow-back" size={18} style={styles.backIcon}/>
+      </View>
+    </TouchableOpacity>
+  )
+}
+
+export function BackButtonWithPrompt({navigation}) {
+
+  const backButtonHandler = () => {
+    Alert.alert("Yakin ingin membatalkan?", "Semua perubahan yang belum disimpan akan hilang.", [
+        { text: "Buang Perubahan", onPress: () => navigation.goBack() },
+        { text: "Batal" },
+      ]
+    )
   }
 
   return (

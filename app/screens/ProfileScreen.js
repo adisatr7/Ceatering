@@ -143,7 +143,7 @@ export default function ProfileScreen({navigation}) {
         <ProfileScreenButton icon={"key-outline"} text={"Ubah Kata Sandi"} onPress={gotoEditPassword}/>
 
         {/* Go to Gamification screen */}
-        <ProfileScreenButton icon={"ribbon-outline"} text={"Misi Harian"}/>
+        {/* <ProfileScreenButton icon={"ribbon-outline"} text={"Misi Harian"}/> */}
 
         {/* Go to Address Manager screen */}
         <ProfileScreenButton icon={"location-outline"} text={"Alamat Tersimpan"} onPress={gotoSavedAddresses}/>

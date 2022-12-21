@@ -12,8 +12,11 @@ export default function CardComposition({item}) {
     <TouchableOpacity activeOpacity={0.7} style={styles.mainContainer} >
       <Image source={{uri: item.imageUrl}} style={styles.image}/>
       <View style={styles.textContainer}>
-        <Text numberOfLines={1} style={styles.text}>{item.name}</Text>
-        <Text numberOfLines={1} style={styles.priceText}>Rp{formattedPrice}</Text>
+        <Text numberOfLines={1} style={styles.titleText}>{item.name}</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text numberOfLines={1} style={styles.quantityText}>Jumlah: {item.qty}</Text>
+          <Text numberOfLines={1} style={styles.priceText}>Rp{formattedPrice}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   )
@@ -46,18 +49,24 @@ const styles = StyleSheet.create({
   
   textContainer: {
     flex: 3,
-    justifyContent: "center",
+    justifyContent: "space-evenly",
 
     borderWidth: global.debugMode ? 1 : 0,
     borderColor: "magenta"
   },
 
-  text: {
+  titleText: {
     color: "black",
     fontFamily: global.font.medium,
     fontSize: global.fontSize.body,
     marginHorizontal: 10,
-    marginVertical: 8
+  },
+
+  quantityText: {
+    color: "gray",
+    fontFamily: global.font.regular,
+    fontSize: global.fontSize.body,
+    marginHorizontal: 10,
   },
 
   priceText: {
@@ -65,7 +74,8 @@ const styles = StyleSheet.create({
     fontFamily: global.font.bold,
     fontSize: global.fontSize.body,
     marginHorizontal: 10,
-    marginBottom: 14
+    right: 0,
+    textAlign: "right"
   },
 
   captionText: {
